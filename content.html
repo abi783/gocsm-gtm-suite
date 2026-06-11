@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoCSM Webinar — Content Brief</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#fbfbfd; --surface:#ffffff; --surface2:#f5f5f7;
+    --ink:#1d1d1f; --muted:#6e6e73; --faint:#86868b; --line:#e4e4e7;
+    --A:#ff3b30; --B:#34c759; --C:#0071e3; --gold:#ff9f0a; --accent:#5e5ce6;
+    --yel:#ff9f0a; --red:#ff3b30; --grn:#34c759;
+    --r:20px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Inter,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+  a{color:var(--C);text-decoration:none}
+  .wrap{display:grid;grid-template-columns:236px 1fr;max-width:1320px;margin:0 auto}
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:30px 18px;
+    backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.8);border-right:1px solid var(--line)}
+  nav .brand{font-weight:600;font-size:16px;margin:0 8px 16px;letter-spacing:-.02em}
+  nav .brand b{color:var(--C)}
+  nav h4{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:18px 8px 6px;font-weight:600}
+  nav a{display:block;padding:6px 10px;border-radius:8px;color:var(--muted);font-size:13px}
+  nav a:hover{background:var(--surface2);color:var(--ink)}
+  main{padding:60px 56px 120px;min-width:0}
+  section{scroll-margin-top:24px;margin-bottom:84px}
+
+  .eyebrow{font-size:13px;font-weight:600;color:var(--C);margin:0 0 10px;text-transform:uppercase}
+  h1{font-size:54px;line-height:1.05;letter-spacing:-.03em;font-weight:650;margin:0 0 18px;max-width:16ch}
+  h1 .g{background:linear-gradient(110deg,var(--C),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .deck{font-size:21px;color:var(--muted);max-width:720px;line-height:1.45}
+  h2{font-size:38px;letter-spacing:-.025em;font-weight:650;margin:0 0 12px}
+  h2 .sub{display:block;font-size:18px;color:var(--faint);font-weight:400;margin-top:6px;letter-spacing:-.01em}
+  h3{font-size:19px;font-weight:600;margin:0 0 8px;letter-spacing:-.015em}
+  .part{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+
+  .row{display:grid;gap:20px}
+  .c2{grid-template-columns:repeat(2,1fr)}
+  .c3{grid-template-columns:repeat(3,1fr)}
+  .c4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .card p{margin:0;color:var(--muted);font-size:15px}
+  .tint{background:var(--surface2);border:none}
+
+  .stat{font-size:50px;font-weight:650;letter-spacing:-.04em;line-height:1}
+  .stat .u{font-size:21px;color:var(--faint);font-weight:500}
+  .stat.a{color:var(--A)} .stat.b{color:var(--B)} .stat.c{color:var(--C)} .stat.g{color:var(--gold)}
+  .statlbl{color:var(--muted);font-size:14px;margin-top:10px;line-height:1.4}
+
+  .badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;padding:5px 11px;border-radius:999px;margin-bottom:14px}
+  .bA{background:rgba(255,59,48,.1);color:var(--A)}
+  .bB{background:rgba(52,199,89,.12);color:#248a3d}
+  .bC{background:rgba(0,113,227,.1);color:var(--C)}
+
+  /* signal cards */
+  .signal{position:relative;overflow:hidden}
+  .signal .num{position:absolute;top:18px;right:24px;font-size:64px;font-weight:700;color:var(--surface2);line-height:1;letter-spacing:-.04em}
+  .signal h3{position:relative}
+  .lead-pill{display:inline-block;font-size:12px;font-weight:600;background:var(--surface2);color:var(--muted);padding:4px 10px;border-radius:999px;margin:8px 0}
+  .th{display:flex;gap:10px;margin-top:12px;font-size:13px}
+  .th .y,.th .r{flex:1;padding:10px 12px;border-radius:12px;line-height:1.35}
+  .th .y{background:rgba(255,159,10,.1)}
+  .th .y b{color:#b26a00}
+  .th .r{background:rgba(255,59,48,.08)}
+  .th .r b{color:var(--red)}
+  .story{font-size:13.5px;color:var(--muted);font-style:italic;border-left:3px solid var(--line);padding-left:12px;margin-top:14px;line-height:1.45}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:12px 15px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  tr:last-child td{border-bottom:none}
+  .tbl{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  td.red{color:var(--red);font-weight:600} td.grn{color:#248a3d;font-weight:600}
+  .scoretbl td.big{font-size:17px;font-weight:650}
+
+  .chartbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .chartbox h3{margin-bottom:2px}
+  .chartbox .cap{color:var(--faint);font-size:13px;margin:0 0 16px}
+  .cv{position:relative;height:280px}
+  .cv.tall{height:340px}
+  .mermaid{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;overflow-x:auto;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+
+  ul.list{list-style:none;padding:0;margin:0}
+  ul.list li{padding:9px 0 9px 24px;position:relative;color:var(--muted);font-size:14.5px;border-bottom:1px solid var(--line)}
+  ul.list li:last-child{border-bottom:none}
+  ul.list li::before{content:"";position:absolute;left:2px;top:15px;width:6px;height:6px;border-radius:50%;background:var(--C)}
+  ul.list li b{color:var(--ink);font-weight:600}
+
+  .note{background:var(--surface2);border-radius:14px;padding:16px 20px;font-size:14.5px;color:var(--muted);margin:18px 0}
+  .note b{color:var(--ink)}
+  .note.warn{background:rgba(255,159,10,.08)}
+  .note.punch{background:rgba(0,113,227,.06);font-size:16px;color:var(--ink);font-weight:500;line-height:1.45}
+
+  .tl{margin:6px 0 0;padding:0;list-style:none}
+  .tl li{position:relative;padding:0 0 14px 22px;border-left:2px solid var(--line);margin-left:4px}
+  .tl li::before{content:"";position:absolute;left:-6px;top:3px;width:10px;height:10px;border-radius:50%;background:var(--C)}
+  .tl li:last-child{border-left-color:transparent;padding-bottom:0}
+  .tl b{font-size:14px;font-weight:600}
+  .tl span{display:block;color:var(--muted);font-size:13.5px}
+
+  .safe{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px}
+  .s-ok{color:#248a3d} .s-warn{color:#b26a00} .s-no{color:var(--red)}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .d-ok{background:var(--grn)} .d-warn{background:var(--yel)} .d-no{background:var(--red)}
+
+  .foot{color:var(--faint);font-size:12.5px;text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
+  @media(max-width:1080px){.wrap{grid-template-columns:1fr}nav{display:none}main{padding:32px 20px}
+    h1{font-size:36px}h2{font-size:28px}.c2,.c3,.c4{grid-template-columns:1fr}}
+
+  /* shared top bar */
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:50;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.85);border-bottom:1px solid var(--line)}
+  .topbar .home{font-weight:600;font-size:14px;color:var(--ink);letter-spacing:-.01em}
+  .topbar .home b{color:var(--C)}
+  .topbar .links{display:flex;gap:4px;flex-wrap:wrap}
+  .topbar .links a{font-size:13px;color:var(--muted);padding:6px 12px;border-radius:8px}
+  .topbar .links a:hover{background:var(--surface2);color:var(--ink)}
+  .topbar .links a.active{background:var(--surface2);color:var(--ink);font-weight:600}
+  .wrap{margin-top:52px}
+  nav{top:52px;height:calc(100vh - 52px)}
+  @media(max-width:1080px){.topbar{position:static}.wrap{margin-top:0}}
+</style>
+</head>
+<body>
+<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Home</a><a href="funnel.html">Funnel & Pricing</a><a href="content.html" class="active">Content Brief</a><a href="triggers.html">Trigger Playbook</a><a href="guarantee.html">Guarantee</a></div></div>
+<div class="wrap">
+<nav>
+  <div class="brand">Go<b>CSM</b> · Content Brief</div>
+  <h4>Part 1 · Signals</h4>
+  <a href="#signals">The 5 Churn Signals</a>
+  <a href="#signal-table">Summary &amp; rule</a>
+  <h4>Part 2 · Health Score</h4>
+  <a href="#health">The formula</a>
+  <a href="#twoclients">Two-client autopsy</a>
+  <a href="#bands">Bands → actions</a>
+  <h4>Part 3 · Playbook</h4>
+  <a href="#playbook">90-day playbook</a>
+  <h4>Part 4 · Variants</h4>
+  <a href="#variants">Per-variant skins</a>
+  <h4>Part 5 · Stats</h4>
+  <a href="#stats">Slide-safe appendix</a>
+  <h4>Part 6 · Stories</h4>
+  <a href="#stories">Story bank</a>
+</nav>
+
+<main>
+<!-- HERO -->
+<section id="top">
+  <p class="eyebrow">Teaching Material · Slide-Ready</p>
+  <h1>What to teach,<br>show &amp; <span class="g">say.</span></h1>
+  <p class="deck">The core curriculum behind every variant — five signals, one health score, a 90-day playbook. Build these slides once, skin them per angle, keep every stat slide-safe.</p>
+  <div class="row c4" style="margin-top:44px">
+    <div class="card"><div class="stat a">5</div><div class="statlbl">churn signals, each with lead time &amp; thresholds</div></div>
+    <div class="card"><div class="stat c">40/30/<br>20/10</div><div class="statlbl">the weighted health-score spine</div></div>
+    <div class="card"><div class="stat b">90</div><div class="statlbl">day retention playbook, week by week</div></div>
+    <div class="card"><div class="stat g">3</div><div class="statlbl">variant skins over one shared core</div></div>
+  </div>
+</section>
+
+<!-- PART 1: SIGNALS -->
+<section id="signals">
+  <p class="part">Part 1 · Secret #2 in every variant</p>
+  <h2>The 5 Churn Signals<span class="sub">Each one: what it is → why it predicts → lead time → manual GHL spot-check → thresholds.</span></h2>
+
+  <div class="chartbox" style="margin-bottom:24px">
+    <h3>The signals fire in sequence — adoption first, payment last</h3>
+    <p class="cap">Lead time before cancellation. The earlier signals buy you the most room to intervene.</p>
+    <div class="cv"><canvas id="leadtime"></canvas></div>
+  </div>
+
+  <div class="row c2">
+    <div class="card signal"><div class="num">1</div>
+      <h3>Declining feature adoption</h3>
+      <span class="lead-pill">Lead time · 30–60 days · strongest predictor</span>
+      <p>Breadth of usage shrinks — workflows + calendars + campaigns down to just Conversations. 5+ features retain ~92–96% vs ~60–75% for 1–2.</p>
+      <div class="th"><div class="y"><b>🟡</b> ≤2 core features, or one abandoned this month</div><div class="r"><b>🔴</b> −2 features in 60d, or no 2nd feature by Day 30</div></div>
+      <p class="story">The med spa that ran calendars + reactivation campaigns — then by May used GHL as an inbox. By June: "remind me what we're paying for?"</p>
+    </div>
+    <div class="card signal"><div class="num">2</div>
+      <h3>Usage &amp; spend decline</h3>
+      <span class="lead-pill">Lead time · 30–45 days · the velocity drop</span>
+      <p>Same features, falling volume — fewer messages, fewer leads, wallet spend trending down. "I don't see results" is the #1 reason locals fire agencies.</p>
+      <div class="th"><div class="y"><b>🟡</b> 20–30% decline in any core metric MoM</div><div class="r"><b>🔴</b> 50%+ decline, or wallet near zero</div></div>
+      <p class="story">The gym workflow: 400 SMS in Jan, 220 Feb, 90 Mar. The wallet chart screamed for 60 days before "we're pausing — money's tight."</p>
+    </div>
+    <div class="card signal"><div class="num">3</div>
+      <h3>Stale assets / ghost account</h3>
+      <span class="lead-pill">Lead time · 45–90 days · longest fuse, easiest to miss</span>
+      <p>Nothing new created. Old automations keep firing so dashboards look "active" — but no human is investing in the account or the relationship.</p>
+      <div class="th"><div class="y"><b>🟡</b> No new/modified asset in 30 days</div><div class="r"><b>🔴</b> Nothing in 60d+ AND no work scheduled</div></div>
+      <p class="story">The realtor's 2024 listing-alert workflow still fired daily. No new campaign since November. "I don't think anyone's actually working on my account."</p>
+    </div>
+    <div class="card signal"><div class="num">4</div>
+      <h3>Sentiment drop &amp; silence</h3>
+      <span class="lead-pill">Lead time · 14–45 days · a late-stage signal</span>
+      <p>NPS falls, replies get terse — or go silent. Only <b>1 in 26</b> unhappy customers complains; the rest just churn. Absence of complaints ≠ satisfaction.</p>
+      <div class="th"><div class="y"><b>🟡</b> Passive NPS, slow replies, unresolved complaint</div><div class="r"><b>🔴</b> Detractor + any behavior signal, or 30d silence</div></div>
+      <p class="story">The dentist complained twice in October, got it fixed, never complained again — never replied again either. Cancelled in January.</p>
+    </div>
+  </div>
+  <div class="row" style="margin-top:20px">
+    <div class="card signal"><div class="num">5</div>
+      <h3>Payment friction + renewal proximity <span style="color:var(--faint);font-weight:400;font-size:15px">— the compound signal</span></h3>
+      <span class="lead-pill">Lead time · 7–30 days (renewal window opens at 90)</span>
+      <div class="row c2" style="margin-top:6px">
+        <p>Failed payments, expiring cards, or an approaching renewal — landing on an account already unhealthy on signals 1–4. Involuntary churn is <b>20–40% of all churn</b>, and the most fixable: dunning recovers 40–60%+. But a failed payment on a low-health account 30 days from renewal is a cancellation in progress.</p>
+        <div>
+          <div class="th"><div class="y"><b>🟡</b> One recovered failure, card expiring &lt;30d, renewal &lt;90d on a steady account</div></div>
+          <div class="th"><div class="r"><b>🔴</b> Repeated failures, any downgrade, or renewal &lt;60d + health &lt;60</div></div>
+          <p class="story">The contractor's card expired in November — three silent retries, account suspended, no call. By January he'd signed with a competitor: "I figured you didn't notice I was gone."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="signal-table">
+  <h2>The summary slide<span class="sub">One signal = watch. Two = act this week. Three+ = that account is canceling.</span></h2>
+  <div class="tbl">
+    <table>
+      <tr><th>#</th><th>Signal</th><th>Lead time</th><th>🟡 Yellow</th><th>🔴 Red</th></tr>
+      <tr><td>1</td><td><b>Adoption narrowing</b></td><td>30–60 days</td><td>≤2 features</td><td class="red">−2 features in 60d</td></tr>
+      <tr><td>2</td><td><b>Usage/spend decline</b></td><td>30–45 days</td><td>−20–30% MoM</td><td class="red">−50%+ / wallet ≈ 0</td></tr>
+      <tr><td>3</td><td><b>Stale assets</b></td><td>45–90 days</td><td>Nothing new 30d</td><td class="red">Nothing new 60d+</td></tr>
+      <tr><td>4</td><td><b>Sentiment / silence</b></td><td>14–45 days</td><td>Passive NPS, slow replies</td><td class="red">Detractor + behavior</td></tr>
+      <tr><td>5</td><td><b>Payment + renewal</b></td><td>7–30 days</td><td>Card expiring, renewal &lt;90d</td><td class="red">Failed pay + health &lt;60</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- PART 2: HEALTH SCORE -->
+<section id="health">
+  <p class="part">Part 2 · Secret #1 in every variant</p>
+  <h2>The Client Health Score<span class="sub">No single metric predicts churn — weighted composites do. Weights reflect predictive power, not ease of measurement.</span></h2>
+  <div class="row c2">
+    <div class="chartbox"><h3>The formula</h3><p class="cap">Health = Adoption 40 + Revenue 30 + Sentiment 20 + Login 10.</p><div class="cv"><canvas id="weights"></canvas></div></div>
+    <div class="card">
+      <h3>Per-dimension rubric · score each 0–100</h3>
+      <ul class="list">
+        <li><b>Adoption (40)</b> · 5+ feat = 100 · 3–4 = 70 · 2 = 40 · 1 = 20 · declining −20</li>
+        <li><b>Revenue (30)</b> · growing = 100 · flat = 70 · −20–30% = 40 · failed pay = 10</li>
+        <li><b>Sentiment (20)</b> · promoter = 100 · passive = 60 · no response = 50 · detractor = 10</li>
+        <li><b>Login (10)</b> · weekly = 100 · monthly = 60 · 30d dark = 0</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="twoclients">
+  <h2>The killer slide<span class="sub">Two clients, identical logins, opposite health. Walk the math live — this breaks False Belief #1 on its own.</span></h2>
+  <div class="tbl scoretbl">
+    <table>
+      <tr><th>Dimension</th><th>FitZone Gym</th><th>Smile Dental</th></tr>
+      <tr><td>Logins (10%)</td><td>3×/week ✅ <b>100</b></td><td>3×/week ✅ <b>100</b></td></tr>
+      <tr><td>Adoption (40%)</td><td class="red">Inbox only, workflows dark 60d · 20</td><td class="grn">Full suite, edited weekly · 100</td></tr>
+      <tr><td>Revenue (30%)</td><td class="red">Spend −60%, 1 failed pay · 10</td><td class="grn">Spend +15%, autopay clean · 100</td></tr>
+      <tr><td>Sentiment (20%)</td><td class="red">Ignored NPS, terse · 30</td><td class="grn">NPS 9 · 100</td></tr>
+      <tr><td>Weighted score</td><td class="big red">27 🔴 cancels in 45d</td><td class="big grn">100 🟢 best account</td></tr>
+    </table>
+  </div>
+  <div class="note punch">Your login report says these two clients are identical. One is your best account. The other cancels in 45 days. <b>Login activity is 10% of the truth — and it's the only 10% most agencies look at.</b></div>
+</section>
+
+<section id="bands">
+  <h2>Bands → actions<span class="sub">The operational layer — what the score tells you to do this week.</span></h2>
+  <div class="row c4">
+    <div class="card" style="border-top:3px solid var(--grn)"><h3>80–100 · Thriving</h3><p>Expansion conversation, case-study &amp; referral ask. <b>Variant B:</b> these are your upsell list.</p></div>
+    <div class="card" style="border-top:3px solid var(--C)"><h3>60–79 · Healthy</h3><p>Maintain cadence; nudge toward one more feature.</p></div>
+    <div class="card" style="border-top:3px solid var(--yel)"><h3>40–59 · Monitor</h3><p>Diagnostic call this month; find the stalled dimension.</p></div>
+    <div class="card" style="border-top:3px solid var(--red)"><h3>&lt;40 · At Risk</h3><p>Intervene this week. Renewal &lt;90d? Drop everything.</p></div>
+  </div>
+  <div class="note"><b>Attendee homework (sets up the demo):</b> score your top 10 clients by MRR tonight. Most find 2–3 sub-40 accounts they thought were "fine." Then ask — how long to score all 100+ every week?</div>
+</section>
+
+<!-- PART 3: PLAYBOOK -->
+<section id="playbook">
+  <p class="part">Part 3 · Secret #3 support · Variant C centerpiece</p>
+  <h2>The 90-Day Retention Playbook<span class="sub">40–60% of cancellations happen in the first 90 days. Your client doesn't buy GHL — they buy the phone ringing.</span></h2>
+  <div class="mermaid">
+flowchart LR
+  A["<b>Days 0–30 · Activate</b><br/>first value ≤14 days<br/>kickoff · campaign live · first lead"] --> B["<b>Days 31–60 · Breadth</b><br/>3+ features adopted<br/>watch Day 45–75 usage drop"]
+  B --> C["<b>Days 61–90 · Prove</b><br/>ROI story + next step<br/>QBR in leads &amp; revenue"]
+  </div>
+  <div class="row c3" style="margin-top:20px">
+    <div class="card" style="border-top:3px solid var(--C)">
+      <h3>Days 0–30 · Activation</h3>
+      <ul class="list">
+        <li>Day 0–3: kickoff, define <b>the one outcome</b>, set expectations</li>
+        <li>Day 7: first campaign live</li>
+        <li>Day 10–14: <b>first lead delivered — celebrate loudly</b></li>
+        <li>Target: ≥60% hit first value by Day 30</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <h3>Days 31–60 · Habit</h3>
+      <ul class="list">
+        <li>Add 2nd &amp; 3rd feature — multi-feature ≈ 70% higher retention</li>
+        <li><b>Danger window:</b> Day 45–75 usage drop = top predictor</li>
+        <li>Day 60: mini-QBR in their language — leads, not impressions</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--grn)">
+      <h3>Days 61–90 · Proof</h3>
+      <ul class="list">
+        <li>Day 90 QBR: leads × bookings × revenue vs fee</li>
+        <li>"You paid $297 — the system booked 41 appointments"</li>
+        <li>Healthy → expansion. At-risk → re-onboard, not discount.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note"><b>The automated layer (GoCSM triggers):</b> inactivity → re-engagement · feature gap at Day 30 → onboarding nudge · failed payment → dunning (recovers 40–60%+) · renewal T-90/60/30 + low health → human outreach. Win-back: highest response in the first 30–60 days post-cancel, lead with the fixed issue, not a discount.</div>
+</section>
+
+<!-- PART 4: VARIANTS -->
+<section id="variants">
+  <p class="part">Part 4 · One core, three skins</p>
+  <h2>Per-variant content briefs<span class="sub">Same Parts 1–3. What changes: hook stats, story beats, secret framing, demo emphasis.</span></h2>
+  <div class="row c3">
+    <div class="card" style="border-top:3px solid var(--A)">
+      <span class="badge bA">A · Fear</span>
+      <h3>The Silent Churn</h3>
+      <ul class="list">
+        <li><b>Hook:</b> "MRR × 0.30 walks out yearly" + the 1-in-26 stat</li>
+        <li><b>Secret 1:</b> two-client table as a live autopsy</li>
+        <li><b>Secret 2:</b> signals as a countdown — 60d → 7d warning</li>
+        <li><b>Demo:</b> sort by risk → 60-day decline → MRR-at-risk total</li>
+        <li><b>Charts:</b> churn-iceberg · lead-time timeline · MRR-at-risk bar</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--B)">
+      <span class="badge bB">B · Opportunity</span>
+      <h3>The Retention Engine</h3>
+      <ul class="list">
+        <li><b>Hook:</b> retain+expand 10 vs sign 17 — 5–25× cheaper</li>
+        <li><b>Secret 1:</b> health score inverted — 80+ = expansion list</li>
+        <li><b>Secret 2:</b> 5 signals reversed into expansion signals + NRR math</li>
+        <li><b>Demo:</b> filter "upsell candidates" → ready for the $497 tier</li>
+        <li><b>Charts:</b> acq-vs-retention cost · NRR compounding curve</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--C)">
+      <span class="badge bC">C · Authority</span>
+      <h3>The CS Playbook</h3>
+      <ul class="list">
+        <li><b>Hook:</b> "support is reactive, CS is proactive — steal the OS"</li>
+        <li><b>Secret 1:</b> score as infrastructure — weights by predictive power</li>
+        <li><b>Secret 2:</b> full 90-day playbook + lifecycle stages</li>
+        <li><b>Demo:</b> full workspace tour as an operating system</li>
+        <li><b>Charts:</b> 3-layer OS diagram · lifecycle timeline · trigger flow</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin:32px 0 12px">Variant C · the 3-layer operating system</h3>
+  <div class="mermaid">
+flowchart TD
+  L1["<b>Layer 1 · Score</b><br/>weighted health 0–100<br/>40/30/20/10"] --> L2["<b>Layer 2 · Lifecycle</b><br/>Onboarding 0–90 · Growth 91–180 · Mature 181+<br/>which signals matter per stage"]
+  L2 --> L3["<b>Layer 3 · Triggers</b><br/>inactivity · feature-gap<br/>failed-payment · renewal-risk"]
+  </div>
+</section>
+
+<!-- PART 5: STATS -->
+<section id="stats">
+  <p class="part">Part 5 · Credibility firewall</p>
+  <h2>The slide-safe stats appendix<span class="sub">Green = use freely. Amber = use with honest attribution. Red = never on a slide.</span></h2>
+
+  <div class="row c3" style="margin-bottom:8px">
+    <div class="card"><span class="safe s-ok"><span class="dot d-ok"></span>SAFE</span><p style="margin-top:8px">Well-sourced — name the source, use freely.</p></div>
+    <div class="card"><span class="safe s-warn"><span class="dot d-warn"></span>WITH FRAMING</span><p style="margin-top:8px">Old/practitioner-grade — attribute honestly, don't say "recent."</p></div>
+    <div class="card"><span class="safe s-no"><span class="dot d-no"></span>DO NOT USE</span><p style="margin-top:8px">Unverifiable or placeholder — keep off slides.</p></div>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <tr><th></th><th>Stat</th><th>How to phrase it</th></tr>
+      <tr><td><span class="dot d-ok"></span></td><td>New customer costs <b>5–25×</b> more than retaining</td><td>"Per Harvard Business Review (Gallo, 2014)"</td></tr>
+      <tr><td><span class="dot d-ok"></span></td><td><b>5% retention → 25–95% profit</b></td><td>"Bain &amp; Company research" — a range, not a law</td></tr>
+      <tr><td><span class="dot d-ok"></span></td><td>Sell to existing: <b>60–70%</b> vs <b>5–20%</b> new</td><td>Marketing Metrics — safe</td></tr>
+      <tr><td><span class="dot d-ok"></span></td><td>Involuntary churn = <b>20–40%</b> of total</td><td>"Industry analyses put it at 20–40%"</td></tr>
+      <tr><td><span class="dot d-ok"></span></td><td>Dunning recovers <b>40–60%+</b> of failures</td><td>Safe</td></tr>
+      <tr><td><span class="dot d-ok"></span></td><td><b>40–60%</b> of cancels in first 90 days</td><td>Use this range — <b>not</b> a flat 70%</td></tr>
+      <tr><td><span class="dot d-ok"></span></td><td>3+ features ≈ <b>70% higher</b> 12-mo retention</td><td>"Product analytics benchmarks show…"</td></tr>
+      <tr><td><span class="dot d-ok"></span></td><td>SMB SaaS churn <b>3–7%/mo</b></td><td>Safe as a range</td></tr>
+      <tr><td><span class="dot d-warn"></span></td><td><b>1 in 26</b> unhappy customers complain</td><td>"Long-standing CX research by ex-Gartner analyst Esteban Kolsky" — not "recent"</td></tr>
+      <tr><td><span class="dot d-warn"></span></td><td><b>96% don't complain; 91% never return</b></td><td>1st Financial Training Svcs, 1990s. Pick this OR 1-in-26, never both</td></tr>
+      <tr><td><span class="dot d-no"></span></td><td>"<b>70%</b> of churn in first 90 days" as fact</td><td>Verifiable range is 40–60% — use that</td></tr>
+      <tr><td><span class="dot d-no"></span></td><td>"GHL agencies churn at X%"</td><td>No rigorous study exists — use SMB 3–7%</td></tr>
+      <tr><td><span class="dot d-no"></span></td><td>GoCSM site "$640K protected" results</td><td>Placeholder data — wait for real outcomes</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- PART 6: STORIES -->
+<section id="stories">
+  <p class="part">Part 6 · Seasoning — one story per point, never two</p>
+  <h2>The GHL-audience story bank<span class="sub">Documented agency-client failure patterns that make every abstract point land.</span></h2>
+  <div class="row c2">
+    <div class="card"><h3>The vanity-report cancellation</h3><p>"Impressions up, but my phone isn't ringing." #1 documented reason locals fire agencies. → Report in leads/bookings/revenue.</p></div>
+    <div class="card"><h3>The quiet-phase breakup</h3><p>Breakups start with slower replies, fewer approvals, less trust — not a blow-up. → Signals 3 + 4.</p></div>
+    <div class="card"><h3>The "fine last month" client</h3><p>Every owner has one. → 1-in-26; sentiment is late, behavior leaks first.</p></div>
+    <div class="card"><h3>The 3am cancellation email</h3><p>The visceral shared moment. → Opens Variant A.</p></div>
+    <div class="card"><h3>The expectations time-bomb</h3><p>Over-promised at sale, under-delivered by Day 30. → Day 0–3 kickoff.</p></div>
+    <div class="card"><h3>The communication tax</h3><p>"Can't reply in 48h — do they even care?" → Response-time as a sentiment proxy.</p></div>
+    <div class="card"><h3>The January/December effect</h3><p>Year-end budget cuts cluster churn; gyms churn into January. → Renewal risk isn't evenly spread.</p></div>
+    <div class="card"><h3>The "I figured you didn't notice" contractor</h3><p>The most damning line a churned client can say. → The case for automated payment monitoring.</p></div>
+  </div>
+  <div class="note" style="margin-top:24px"><b>How to use this brief:</b> Parts 1–3 are your teaching core — build once, reuse across all variants. Part 4 skins them per angle. Part 5 keeps credibility clean. Part 6 is seasoning.</div>
+  <div class="foot">GoCSM Webinar Content Brief · v1.0 · 2026-06-11 · stats colour-coded by slide-safety — honour the amber &amp; red flags.</div>
+</section>
+</main>
+</div>
+
+<script>
+const ink='#1d1d1f',muted='#6e6e73',faint='#86868b',line='#e4e4e7';
+const A='#ff3b30',B='#34c759',C='#0071e3',gold='#ff9f0a',accent='#5e5ce6';
+mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{
+  fontFamily:'-apple-system,SF Pro Text,Inter,sans-serif',fontSize:'13px',
+  primaryColor:'#f5f5f7',primaryTextColor:ink,primaryBorderColor:line,
+  lineColor:'#c7c7cc',secondaryColor:'#fff',tertiaryColor:'#fff'}});
+Chart.defaults.color=muted;Chart.defaults.font.family='-apple-system,SF Pro Text,Inter,sans-serif';
+Chart.defaults.font.size=13;Chart.defaults.borderColor=line;
+const g={grid:{color:line,drawBorder:false},ticks:{color:faint}};
+const noG={grid:{display:false},ticks:{color:faint}};
+
+// lead-time horizontal bars (max lead time per signal)
+new Chart(leadtime,{type:'bar',data:{
+  labels:['1 · Adoption','2 · Usage/spend','3 · Stale assets','4 · Sentiment','5 · Payment'],
+  datasets:[{label:'lead time (days)',data:[60,45,90,45,30],
+    backgroundColor:[C,'#4a9eea',gold,'#ff7a5c',A],borderRadius:8,barPercentage:.62}]},
+  options:{indexAxis:'y',plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:c=>'up to '+c.raw+' days warning'}}},
+  scales:{x:{...g,title:{display:true,text:'days of warning before cancellation',color:faint}},y:noG}}});
+
+// health weights donut
+new Chart(weights,{type:'doughnut',data:{labels:['Adoption 40%','Revenue 30%','Sentiment 20%','Login 10%'],
+  datasets:[{data:[40,30,20,10],backgroundColor:[C,B,gold,A],borderColor:'#fff',borderWidth:3}]},
+  options:{cutout:'62%',plugins:{legend:{position:'bottom',labels:{padding:14,boxWidth:10,usePointStyle:true}}}}});
+</script>
+</body>
+</html>

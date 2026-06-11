@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoCSM Webinar Funnel — A/B/C</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#fbfbfd; --surface:#ffffff; --surface2:#f5f5f7;
+    --ink:#1d1d1f; --muted:#6e6e73; --faint:#86868b; --line:#e4e4e7;
+    --A:#ff3b30; --B:#34c759; --C:#0071e3; --gold:#ff9f0a; --accent:#5e5ce6;
+    --r:20px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Inter,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em;
+  }
+  a{color:var(--C);text-decoration:none}
+  .wrap{display:grid;grid-template-columns:230px 1fr;max-width:1320px;margin:0 auto}
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:30px 18px;
+    backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.8);border-right:1px solid var(--line)}
+  nav .brand{font-weight:600;font-size:17px;margin:0 8px 18px;letter-spacing:-.02em}
+  nav .brand b{color:var(--C)}
+  nav h4{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:20px 8px 6px;font-weight:600}
+  nav a{display:block;padding:6px 10px;border-radius:8px;color:var(--muted);font-size:13px;font-weight:450}
+  nav a:hover{background:var(--surface2);color:var(--ink)}
+  main{padding:64px 56px 120px;min-width:0}
+  section{scroll-margin-top:24px;margin-bottom:88px}
+
+  .eyebrow{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--C);margin:0 0 10px;text-transform:uppercase}
+  h1{font-size:56px;line-height:1.05;letter-spacing:-.03em;font-weight:650;margin:0 0 18px;max-width:14ch}
+  h1 .g{background:linear-gradient(110deg,var(--C),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .deck{font-size:21px;color:var(--muted);max-width:680px;line-height:1.45;font-weight:400}
+  h2{font-size:40px;letter-spacing:-.025em;font-weight:650;margin:0 0 12px}
+  h2 .sub{display:block;font-size:19px;color:var(--faint);font-weight:400;margin-top:6px;letter-spacing:-.01em}
+  h3{font-size:19px;font-weight:600;margin:0 0 8px;letter-spacing:-.015em}
+
+  .row{display:grid;gap:20px}
+  .c2{grid-template-columns:repeat(2,1fr)}
+  .c3{grid-template-columns:repeat(3,1fr)}
+  .c4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .card p{margin:0;color:var(--muted);font-size:15px}
+  .tint{background:var(--surface2);border:none}
+
+  .stat{font-size:52px;font-weight:650;letter-spacing:-.04em;line-height:1}
+  .stat .u{font-size:22px;color:var(--faint);font-weight:500}
+  .stat.a{color:var(--A)} .stat.b{color:var(--B)} .stat.c{color:var(--C)} .stat.g{color:var(--gold)}
+  .statlbl{color:var(--muted);font-size:14px;margin-top:10px;line-height:1.4}
+
+  .badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;
+    padding:5px 11px;border-radius:999px;margin-bottom:14px}
+  .bA{background:rgba(255,59,48,.1);color:var(--A)}
+  .bB{background:rgba(52,199,89,.12);color:#248a3d}
+  .bC{background:rgba(0,113,227,.1);color:var(--C)}
+  .topA{border-top:3px solid var(--A)} .topB{border-top:3px solid var(--B)} .topC{border-top:3px solid var(--C)}
+
+  .quote{font-size:17px;font-weight:500;color:var(--ink);line-height:1.4;letter-spacing:-.015em}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  tr:last-child td{border-bottom:none}
+  td.win{color:#248a3d;font-weight:600}
+  .tbl{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+
+  .tl{margin:6px 0 0;padding:0;list-style:none}
+  .tl li{position:relative;padding:0 0 14px 22px;border-left:2px solid var(--line);margin-left:4px}
+  .tl li::before{content:"";position:absolute;left:-6px;top:3px;width:10px;height:10px;border-radius:50%;background:var(--C)}
+  .tl li:last-child{border-left-color:transparent;padding-bottom:0}
+  .tl b{font-size:14px;font-weight:600}
+  .tl span{display:block;color:var(--muted);font-size:13.5px}
+
+  .chartbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .chartbox h3{margin-bottom:2px}
+  .chartbox .cap{color:var(--faint);font-size:13px;margin:0 0 16px}
+  .cv{position:relative;height:280px}
+  .cv.tall{height:340px}
+  .mermaid{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;overflow-x:auto;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+
+  ul.list{list-style:none;padding:0;margin:0}
+  ul.list li{padding:9px 0 9px 24px;position:relative;color:var(--muted);font-size:14.5px;border-bottom:1px solid var(--line)}
+  ul.list li:last-child{border-bottom:none}
+  ul.list li::before{content:"";position:absolute;left:2px;top:15px;width:6px;height:6px;border-radius:50%;background:var(--C)}
+  ul.list li b{color:var(--ink);font-weight:600}
+
+  .note{background:var(--surface2);border-radius:14px;padding:16px 20px;font-size:14.5px;color:var(--muted);margin:18px 0}
+  .note b{color:var(--ink)}
+  .note.warn{background:rgba(255,159,10,.08)}
+
+  .belief{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .belief:last-child{border-bottom:none}
+  .belief .n{color:var(--A);font-weight:650;font-size:17px;flex:0 0 auto;width:18px}
+  .belief b{font-weight:600}
+  .belief span{display:block;color:#248a3d;font-size:14px;margin-top:2px}
+
+  .foot{color:var(--faint);font-size:12.5px;text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
+  @media(max-width:1080px){.wrap{grid-template-columns:1fr}nav{display:none}main{padding:32px 20px}
+    h1{font-size:38px}h2{font-size:30px}.c2,.c3,.c4{grid-template-columns:1fr}}
+
+  /* shared top bar */
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:50;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.85);border-bottom:1px solid var(--line)}
+  .topbar .home{font-weight:600;font-size:14px;color:var(--ink);letter-spacing:-.01em}
+  .topbar .home b{color:var(--C)}
+  .topbar .links{display:flex;gap:4px;flex-wrap:wrap}
+  .topbar .links a{font-size:13px;color:var(--muted);padding:6px 12px;border-radius:8px}
+  .topbar .links a:hover{background:var(--surface2);color:var(--ink)}
+  .topbar .links a.active{background:var(--surface2);color:var(--ink);font-weight:600}
+  .wrap{margin-top:52px}
+  nav{top:52px;height:calc(100vh - 52px)}
+  @media(max-width:1080px){.topbar{position:static}.wrap{margin-top:0}}
+</style>
+</head>
+<body>
+<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Home</a><a href="funnel.html" class="active">Funnel & Pricing</a><a href="content.html">Content Brief</a><a href="triggers.html">Trigger Playbook</a><a href="guarantee.html">Guarantee</a></div></div>
+<div class="wrap">
+<nav>
+  <div class="brand">Go<b>CSM</b> · Webinar Funnel</div>
+  <h4>Overview</h4>
+  <a href="#top">The thesis</a>
+  <a href="#data">The data</a>
+  <a href="#skeleton">Shared skeleton</a>
+  <h4>Variants</h4>
+  <a href="#variantA" style="color:var(--A)">A · Silent Churn</a>
+  <a href="#variantB" style="color:#248a3d">B · Retention Engine</a>
+  <a href="#variantC" style="color:var(--C)">C · CS Playbook</a>
+  <a href="#compare">Compare</a>
+  <h4>Test</h4>
+  <a href="#funnel">Funnel</a>
+  <a href="#phases">Phases</a>
+  <a href="#metrics">Metrics</a>
+  <h4>Money model</h4>
+  <a href="#pricing">Pricing tiers</a>
+  <a href="#offer">The offer</a>
+  <a href="#cashflow">Cashflow</a>
+  <a href="#downsell">Downsell · L3</a>
+  <a href="#thresholds">Thresholds</a>
+  <a href="#recs">Decide</a>
+</nav>
+
+<main>
+<!-- HERO -->
+<section id="top">
+  <p class="eyebrow">A/B/C Test Design</p>
+  <h1>Three webinars,<br>one <span class="g">skeleton.</span></h1>
+  <p class="deck">Same offer, same traffic, same demo. Change only the emotional angle — then let the funnel pick the winner on paid&nbsp;buyers, not registrations.</p>
+
+  <div class="row c4" style="margin-top:44px">
+    <div class="card"><div class="stat g">10<span class="u">%</span></div><div class="statlbl">Login activity is only 10% of real client health</div></div>
+    <div class="card"><div class="stat a">~70<span class="u">%</span></div><div class="statlbl">of churn happens in the first 90 days</div></div>
+    <div class="card"><div class="stat b">25–95<span class="u">%</span></div><div class="statlbl">profit lift from a 5% retention bump</div></div>
+    <div class="card"><div class="stat c">6–9<span class="u">wk</span></div><div class="statlbl">test window to a confident champion</div></div>
+  </div>
+
+  <div class="row c3" style="margin-top:20px">
+    <div class="card topA"><span class="badge bA">A · Fear</span><h3>The Silent Churn</h3><p>Loss-aversion. Acts fastest. For burned, established agencies.</p></div>
+    <div class="card topB"><span class="badge bB">B · Opportunity</span><h3>The Retention Engine</h3><p>Compounding MRR. Broadest reach on cold traffic.</p></div>
+    <div class="card topC"><span class="badge bC">C · Authority</span><h3>The CS Playbook</h3><p>The whole system. Highest buyer quality.</p></div>
+  </div>
+</section>
+
+<!-- DATA -->
+<section id="data">
+  <h2>The data backbone<span class="sub">Real, quantifiable pain — invisible to the target.</span></h2>
+  <div class="row c2">
+    <div class="chartbox"><h3>Monthly churn</h3><p class="cap">A GHL sub-account behaves like SMB SaaS — present as a range.</p><div class="cv"><canvas id="churn"></canvas></div></div>
+    <div class="chartbox"><h3>Churn is front-loaded</h3><p class="cap">~70% lands in the first 90 days.</p><div class="cv"><canvas id="life"></canvas></div></div>
+  </div>
+  <div class="row c2" style="margin-top:20px">
+    <div class="chartbox"><h3>What health actually weighs</h3><p class="cap">Login — the one thing agencies track — is just 10%.</p><div class="cv"><canvas id="health"></canvas></div></div>
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center">
+      <h3>The 40 / 30 / 20 / 10 spine</h3>
+      <ul class="list">
+        <li><b>Product Adoption — 40%</b> · breaks "login = health"</li>
+        <li><b>Revenue Intelligence — 30%</b> · breaks "I'll know first"</li>
+        <li><b>Customer Sentiment — 20%</b> · breaks "GHL shows me this"</li>
+        <li><b>Login Activity — 10%</b> · the false anchor</li>
+      </ul>
+      <div class="note" style="margin-bottom:0">Free teaching uses the <b>real</b> product weighting — tool and class stay consistent.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SKELETON -->
+<section id="skeleton">
+  <h2>The shared skeleton<span class="sub">Identical across A/B/C — that's what makes it a fair test. Slides ~70% the same.</span></h2>
+  <div class="mermaid">
+flowchart LR
+  H["Hook"] --> O["Origin"]
+  O --> S1["Secret 1<br/>Health Score"]
+  S1 --> S2["Secret 2<br/>5 Churn Signals"]
+  S2 --> S3["Secret 3<br/>GHL gap"]
+  S3 --> T["Transition"] --> ST["Offer<br/>Annual $970 + bonuses"] --> C["Close"]
+  </div>
+  <div class="row c2" style="margin-top:20px">
+    <div class="card">
+      <h3>Three false beliefs — broken every time</h3>
+      <div class="belief"><span class="n">1</span><div><b>"Login = client health"</b><span>Health Score: logins are 10%.</span></div></div>
+      <div class="belief"><span class="n">2</span><div><b>"I'll know before they cancel"</b><span>5 Churn Signals + 70%/90-day rule.</span></div></div>
+      <div class="belief"><span class="n">3</span><div><b>"GHL already gives me this"</b><span>GHL reports churn after the fact.</span></div></div>
+    </div>
+    <div class="card">
+      <h3>One offer stack — identical</h3>
+      <ul class="list">
+        <li><b>GoCSM Annual</b> · up to 100 subs · $970/yr or 3 × $388</li>
+        <li>Health Score template · 90-Day Playbook · 5 Signals pack</li>
+        <li><b>Live-only:</b> booked onboarding call + L3 retainer</li>
+        <li><b>Close:</b> "One saved account pays for the year."</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- VARIANT A -->
+<section id="variantA">
+  <span class="badge bA">Variant A · Fear</span>
+  <h2 style="color:var(--A)">The Silent Churn<span class="sub" style="color:var(--muted)">Spot at-risk GHL clients 60 days before they cancel. For established agencies who've felt it.</span></h2>
+  <div class="row c2">
+    <div class="card topA">
+      <p class="quote">"They don't email you before they cancel. They just… stop."</p>
+      <ul class="list" style="margin-top:14px">
+        <li>5 silent signals your login report misses</li>
+        <li>The Health Score you can run tonight</li>
+        <li>The 60 / 30 / 7-day "ghosting account" autopsy</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Arc</h3>
+      <ul class="tl">
+        <li><b>Hook</b><span>"How many cancelled — how many did you see coming?"</span></li>
+        <li><b>Secrets 1–3</b><span>Live-score twins · 5 signals · the GHL gap.</span></li>
+        <li><b>Demo</b><span>Sort by risk → open one "At Risk" → its 60-day decline.</span></li>
+        <li><b>Close</b><span>Loss-prevention. Urgency.</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="note"><b>Strength:</b> highest urgency &amp; show-up.&nbsp;&nbsp;<b>Risk:</b> heavy; under-converts agencies who haven't felt churn.</div>
+</section>
+
+<!-- VARIANT B -->
+<section id="variantB">
+  <span class="badge bB">Variant B · Opportunity</span>
+  <h2 style="color:#248a3d">The Retention Engine<span class="sub" style="color:var(--muted)">Turn sub-accounts into compounding MRR. Resonates across every size.</span></h2>
+  <div class="row c2">
+    <div class="card topB">
+      <p class="quote">"Grow MRR without signing a single new client."</p>
+      <ul class="list" style="margin-top:14px">
+        <li>The NRR math that grows a flat client base</li>
+        <li>Find upsell-ready accounts hiding in your dashboard</li>
+        <li>Health Score as an expansion-opportunity finder</li>
+      </ul>
+    </div>
+    <div class="chartbox"><h3>The NRR ladder</h3><p class="cap">Median B2B SaaS ≈ 106%; SMB 100–110% is strong.</p><div class="cv"><canvas id="nrr"></canvas></div></div>
+  </div>
+  <div class="note"><b>Strength:</b> broadest, travels on cold traffic, aligns with L3 upsell.&nbsp;&nbsp;<b>Risk:</b> lower urgency; "growth" is crowded.</div>
+</section>
+
+<!-- VARIANT C -->
+<section id="variantC">
+  <span class="badge bC">Variant C · Authority</span>
+  <h2 style="color:var(--C)">The Customer Success Playbook<span class="sub" style="color:var(--muted)">The exact system 100+ account agencies use — nothing held back.</span></h2>
+  <div class="row c2">
+    <div class="card topC">
+      <p class="quote">"Support is reactive. Customer success is proactive."</p>
+      <ul class="list" style="margin-top:14px">
+        <li>The complete CS operating system, mapped</li>
+        <li>Run CSM at scale without a CS team</li>
+        <li>Lifecycle: Onboarding 0–90 / Growth 91–180 / Mature 181+</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Arc</h3>
+      <ul class="tl">
+        <li><b>Hook</b><span>"Manage 100+ accounts on autopilot — the whole playbook."</span></li>
+        <li><b>Secrets 1–3</b><span>Score as foundation · lifecycle + signals · GHL ≠ a CS OS.</span></li>
+        <li><b>Demo</b><span>Full workspace tour as an operating system.</span></li>
+        <li><b>Close</b><span>How you reach — and stay at — Diamond.</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="note"><b>Strength:</b> highest trust &amp; buyer quality; best L3 fit.&nbsp;&nbsp;<b>Risk:</b> lower raw pull; lags on cold traffic.</div>
+</section>
+
+<!-- COMPARE -->
+<section id="compare">
+  <h2>Side by side<span class="sub">Predicted profile — the hypothesis the test replaces with data.</span></h2>
+  <div class="row c2">
+    <div class="chartbox"><h3>Funnel profile</h3><p class="cap">Relative strength per stage, 0–100.</p><div class="cv tall"><canvas id="radar"></canvas></div></div>
+    <div class="tbl">
+      <table>
+        <tr><th></th><th style="color:var(--A)">A</th><th style="color:#248a3d">B</th><th style="color:var(--C)">C</th></tr>
+        <tr><td>Registration</td><td class="win">High</td><td>Broad</td><td>Lower</td></tr>
+        <tr><td>Show-up</td><td class="win">High</td><td>Mid</td><td>Mid</td></tr>
+        <tr><td>Buyer quality</td><td>Mid</td><td>Mid</td><td class="win">High</td></tr>
+        <tr><td>Cold-traffic fit</td><td>Strong</td><td class="win">Strongest</td><td>Weakest</td></tr>
+        <tr><td>L3 attach</td><td>Mid</td><td>Strong</td><td class="win">Strongest</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FUNNEL -->
+<section id="funnel">
+  <h2>The funnel you optimize<span class="sub">Weight paid-on-deadline most — that's the metric that pays.</span></h2>
+  <div class="mermaid">
+flowchart LR
+  V["Visitors"] -->|"30%"| R["Registrants"]
+  R -->|"40%"| AT["Attendees"]
+  AT -->|"buy live · 48–72h"| PD["Paid<br/>$970 / 3×$388"]
+  AT -.->|"didn't buy"| TR["Trial<br/>downsell"]
+  TR -.->|"CS converts"| PD
+  PD -->|"Day 30–90 attach"| L3["L3 retainer"]
+  </div>
+  <div class="chartbox" style="margin-top:20px"><h3>Worked funnel · per variant</h3><p class="cap">Plan traffic backward from ~300 attendees.</p><div class="cv"><canvas id="funnel"></canvas></div></div>
+</section>
+
+<!-- PHASES -->
+<section id="phases">
+  <h2>Phases<span class="sub">Sequential for direction, parallel for confidence.</span></h2>
+  <div class="row c4">
+    <div class="card tint"><h3>Week 0</h3><p>Lock controls. Write hypothesis &amp; primary metric.</p></div>
+    <div class="card tint"><h3>Weeks 1–3</h3><p>Sequential rotation — one angle/week. Directional only.</p></div>
+    <div class="card tint"><h3>Weeks 4–7</h3><p>Parallel 50/50 split of the top two. Real confidence.</p></div>
+    <div class="card tint"><h3>Weeks 8–9</h3><p>Crown on paid buyers at 95%. Repurpose losers.</p></div>
+  </div>
+  <div class="note warn"><b>Sequential is directional only</b> — confounded by time &amp; seasonality. Use it to drop a loser, never to crown a champion.</div>
+</section>
+
+<!-- METRICS -->
+<section id="metrics">
+  <h2>How you decide<span class="sub">Don't crown on registrations.</span></h2>
+  <div class="row c2">
+    <div class="tbl">
+      <table>
+        <tr><th>Metric</th><th>Benchmark</th><th>Weight</th></tr>
+        <tr><td>Registration</td><td>~30%</td><td>Low</td></tr>
+        <tr><td>Show-up</td><td>~40%</td><td>Low</td></tr>
+        <tr><td>Attendee→buyer</td><td>core KPI</td><td>High</td></tr>
+        <tr><td class="win">Paid on deadline</td><td>~10%</td><td class="win">Highest</td></tr>
+        <tr><td>L3 attach</td><td>—</td><td>Secondary</td></tr>
+      </table>
+    </div>
+    <div class="row c3" style="gap:14px;align-content:start">
+      <div class="card" style="grid-column:span 3"><h3>Traffic, backward</h3><p>From the attendee bottleneck.</p></div>
+      <div class="card"><div class="stat c">~300</div><div class="statlbl">attendees</div></div>
+      <div class="card"><div class="stat g">~750</div><div class="statlbl">registrants</div></div>
+      <div class="card"><div class="stat a">~2.5k</div><div class="statlbl">visitors</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <p class="eyebrow">The money model</p>
+  <h2>Pricing architecture<span class="sub">One ladder. Free webinar → annual hero → overage → CSM retainers.</span></h2>
+  <div class="tbl">
+    <table>
+      <tr><th>Tier</th><th>What</th><th>Price</th><th>Role</th></tr>
+      <tr><td><b style="color:var(--C)">L1</b></td><td>Free live masterclass</td><td>$0</td><td>Lead gen + live sales event</td></tr>
+      <tr><td class="win">L2 Hero</td><td>Annual · up to 100 subs</td><td class="win">$970/yr</td><td>The buy-now offer. Cashflow engine.</td></tr>
+      <tr><td>L2 Alt</td><td>3-pay installment</td><td>3 × $388</td><td>Accessibility — all cash in 90 days</td></tr>
+      <tr><td>L2 Fallback</td><td>Monthly</td><td>$97/mo</td><td>Post-deadline downsell only</td></tr>
+      <tr><td>Overage</td><td>Extra subs &gt; 100</td><td>$0.60/sub/mo</td><td>Expansion that scales with growth</td></tr>
+      <tr><td><b style="color:var(--gold)">L3</b></td><td>Dedicated CSM retainer</td><td>$500–1,500/mo</td><td>Day-30/90 upsell, never at signup</td></tr>
+      <tr><td>Trial</td><td>14-day, no card</td><td>$0</td><td>Demoted — follow-up fallback only</td></tr>
+    </table>
+  </div>
+  <div class="note"><b>Enterprise guardrail:</b> custom contracts stay ~$1.00–1.20/sub/mo white-glove. The public $0.60 overage is defensible as self-serve — message it deliberately so enterprise deals aren't undercut.</div>
+
+  <div class="row c2" style="margin-top:24px">
+    <div class="chartbox"><h3>Effective $/sub falls as agencies grow</h3><p class="cap">Painless per-unit overage — frame as growth, never penalty.</p><div class="cv"><canvas id="persub"></canvas></div></div>
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center">
+      <h3>Why annual-first</h3>
+      <ul class="list">
+        <li>Annual churns at <b>⅓</b> the monthly rate (~2.4% vs ~7%/mo)</li>
+        <li>Stays <b>~40 months</b> vs ~14 · <b>2.3×</b> more likely to upgrade</li>
+        <li>"12 for the price of 10" — instantly recognized from GHL</li>
+        <li>16.7% discount sits in the optimal <b>15–20%</b> band</li>
+        <li>All cash lands on <b>Day 0</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section id="offer">
+  <h2>The webinar offer<span class="sub">Lead with the paid annual. No trial visible live — it absorbs the buyers.</span></h2>
+  <div class="row c2">
+    <div class="card">
+      <h3>The stack — value first, price last</h3>
+      <ul class="list">
+        <li><b>GoCSM Annual</b> — 12 months, up to 100 subs</li>
+        <li>🎁 Fast-action: done-for-you setup &amp; workflow build</li>
+        <li>🎁 1:1 onboarding session <span style="color:var(--faint)">(the old trial CTA, now a bonus)</span></li>
+        <li>🎁 Template library — login-drop, NPS, failed-payment, renewal triggers</li>
+        <li>🎁 First 10 buyers: dedicated CSM session <span style="color:var(--faint)">(seeds L3)</span></li>
+        <li><b>Reveal:</b> $970/yr or 3 × $388</li>
+        <li><b>Risk reversal:</b> 30-day keep-the-bonuses guarantee</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Urgency — must be real (FTC)</h3>
+      <ul class="list">
+        <li>Fast-action bonus for buying live / first 24h</li>
+        <li><b>Cart closes 48–72h</b> after the webinar — hard, enforced</li>
+        <li>3–4 emails on close day <span style="color:var(--faint)">(final-day ≈ 2× the money)</span></li>
+        <li>No fake timers, no resetting countdowns</li>
+      </ul>
+      <div class="note" style="margin-bottom:0"><b>Close:</b> "If GoCSM saves even ONE client from churning, it's paid for itself for the year."</div>
+    </div>
+  </div>
+</section>
+
+<!-- CASHFLOW -->
+<section id="cashflow">
+  <h2>Cashflow<span class="sub">Per 100 live attendees, net of ~8–10% refunds, 90-day window.</span></h2>
+  <div class="row c2">
+    <div class="chartbox"><h3>90-day cash by offer structure</h3><p class="cap">Annual hero + 3-pay collects ~5–6× the trial drip.</p><div class="cv"><canvas id="cash"></canvas></div></div>
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="stat g">$20–30K</div>
+      <div class="statlbl" style="font-size:15px">cash collected in the first 90 days at ~240 attendees/mo — vs ~$5–7K under the old trial model.</div>
+      <div class="note" style="margin-bottom:0;margin-top:20px">3-pay at 13% conversion is the single highest 90-day cash structure (~$13K / 100 attendees) — keep it as the accessibility alt, not the hero.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNSELL + L3 -->
+<section id="downsell">
+  <h2>Downsell ladder &amp; L3<span class="sub">The trial isn't dead — it's demoted. Retainers upsell at milestones.</span></h2>
+  <div class="row c2">
+    <div class="card">
+      <h3>Non-buyer ladder</h3>
+      <ul class="tl">
+        <li><b>Live → $970 / 3×$388</b><span>Hero. Cart open 48–72h.</span></li>
+        <li><b>Email 1–3 → 3-pay reminder</b><span>Price objectors.</span></li>
+        <li><b>Email 4–5 → trial + call</b><span>Not-ready segment. CS converts ≥30%.</span></li>
+        <li><b>Final → $97/mo monthly</b><span>Lowest commitment.</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>L3 · dedicated CSM hours</h3>
+      <ul class="list">
+        <li><b>Done-with-you — $500/mo</b> (~4 hrs, ~$125/hr)</li>
+        <li><b>Managed retention — $1,000–1,500/mo</b> (~8–12 hrs)</li>
+        <li>Publish <b>$150–200/hr</b> ad-hoc to anchor retainers</li>
+        <li><b>Triggers:</b> Day-7 for 100+ subs · Day-30/90 QBR · GoCSM-flagged MRR-at-risk</li>
+        <li style="color:var(--A)"><b>Never pitch at signup.</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- THRESHOLDS -->
+<section id="thresholds">
+  <h2>Decision thresholds<span class="sub">When to change the plan — and what to change.</span></h2>
+  <div class="tbl">
+    <table>
+      <tr><th>Signal</th><th>Action</th></tr>
+      <tr><td>Live + deadline conversion &lt; 5%</td><td>Fix the stack/belief-break, <b>not</b> the price</td></tr>
+      <tr><td>Refunds &gt; 15%</td><td>Make guarantee conditional on onboarding completion</td></tr>
+      <tr><td>&gt; 60% choosing 3-pay</td><td>Add a small pay-in-full-only bonus</td></tr>
+      <tr><td>Trial→paid stable &gt; 25%</td><td>A/B test $147/mo base</td></tr>
+      <tr><td>2–3 healthy annual cohorts</td><td>Test 18-month / multi-year prepay</td></tr>
+      <tr><td>Price named as blocker (after offer fixed)</td><td>Only then consider a deeper discount</td></tr>
+    </table>
+  </div>
+  <div class="note warn"><b>Pre-launch must-fix:</b> reconcile the trial cap (site 50 vs handbook 3 → use ~50) and the list price (site $197 vs strategy $97 → align site, checkout &amp; webinar to one number before launch).</div>
+</section>
+
+<!-- RECS -->
+<section id="recs">
+  <h2>Recommendations</h2>
+  <div class="row c2">
+    <div class="card"><h3>1 · Build all three this sprint</h3><p>~70% shared slides — only hook, framing, demo &amp; reg page change.</p></div>
+    <div class="card"><h3>2 · Instrument the full funnel first</h3><p>UTM every link; track live buyers &amp; paid-on-deadline. Send replay within 2–4h.</p></div>
+    <div class="card"><h3>3 · Weight paid buyers &amp; L3 attach</h3><p>If fear fills the room but authority fills the bank — run authority live.</p></div>
+    <div class="card"><h3>4 · No demo numbers as real results</h3><p>Use third-party benchmarks + verifiable facts (#7 most-installed; 38,100+ sub-accounts).</p></div>
+  </div>
+  <div class="note warn" style="margin-top:20px"><b>Thresholds:</b> no variant clears ~30% reg → the <b>pain</b> is wrong. Reg strong, attendee→buyer weak → the <b>demo</b>. Paid conversion weak everywhere → the <b>offer</b>.</div>
+  <div class="foot">GoCSM Webinar Funnel · A/B/C Test Plan · 2026-06-11 · figures are third-party benchmarks &amp; ranges, not verified GoCSM outcomes.</div>
+</section>
+</main>
+</div>
+
+<script>
+const ink='#1d1d1f',muted='#6e6e73',faint='#86868b',line='#e4e4e7';
+const A='#ff3b30',B='#34c759',C='#0071e3',gold='#ff9f0a',accent='#5e5ce6';
+mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{
+  fontFamily:'-apple-system,SF Pro Text,Inter,sans-serif',fontSize:'14px',
+  primaryColor:'#f5f5f7',primaryTextColor:ink,primaryBorderColor:line,
+  lineColor:'#c7c7cc',secondaryColor:'#fff',tertiaryColor:'#fff'}});
+
+Chart.defaults.color=muted;Chart.defaults.font.family='-apple-system,SF Pro Text,Inter,sans-serif';
+Chart.defaults.font.size=13;Chart.defaults.borderColor=line;
+const g={grid:{color:line,drawBorder:false},ticks:{color:faint}};
+const noG={grid:{display:false},ticks:{color:faint}};
+
+new Chart(churn,{type:'bar',data:{labels:['SMB low','SMB high','Ent low','Ent high'],
+  datasets:[{data:[3,7,0.5,1.5],backgroundColor:[A,A,C,C],borderRadius:8,barPercentage:.6}]},
+  options:{plugins:{legend:{display:false}},scales:{y:{...g,title:{display:true,text:'% / month',color:faint}},x:noG}}});
+
+new Chart(life,{type:'doughnut',data:{labels:['First 90 days','Day 91+'],
+  datasets:[{data:[70,30],backgroundColor:[A,'#e4e4e7'],borderColor:'#fff',borderWidth:3}]},
+  options:{cutout:'68%',plugins:{legend:{position:'bottom',labels:{padding:16,boxWidth:10,usePointStyle:true}}}}});
+
+new Chart(health,{type:'doughnut',data:{labels:['Adoption 40%','Revenue 30%','Sentiment 20%','Login 10%'],
+  datasets:[{data:[40,30,20,10],backgroundColor:[C,B,gold,A],borderColor:'#fff',borderWidth:3}]},
+  options:{cutout:'62%',plugins:{legend:{position:'bottom',labels:{padding:14,boxWidth:10,usePointStyle:true}}}}});
+
+new Chart(nrr,{type:'bar',data:{labels:['Contraction','100% Good','110% Better','120%+ Best'],
+  datasets:[{data:[92,100,110,122],backgroundColor:['#e4e4e7',B,B,gold],borderRadius:8,barPercentage:.6}]},
+  options:{plugins:{legend:{display:false}},scales:{y:{...g,suggestedMin:80,suggestedMax:130,title:{display:true,text:'NRR %',color:faint}},x:noG}}});
+
+new Chart(radar,{type:'radar',data:{labels:['Reg','Show-up','Att→Buyer','Buyer quality','Cold fit','L3'],
+  datasets:[
+    {label:'A',data:[90,88,70,62,80,55],borderColor:A,backgroundColor:'rgba(255,59,48,.08)',pointBackgroundColor:A,borderWidth:2},
+    {label:'B',data:[78,72,72,68,90,80],borderColor:B,backgroundColor:'rgba(52,199,89,.08)',pointBackgroundColor:B,borderWidth:2},
+    {label:'C',data:[62,70,78,90,55,92],borderColor:C,backgroundColor:'rgba(0,113,227,.08)',pointBackgroundColor:C,borderWidth:2}
+  ]},options:{plugins:{legend:{position:'bottom',labels:{padding:18,boxWidth:10,usePointStyle:true}}},
+  scales:{r:{angleLines:{color:line},grid:{color:line},pointLabels:{color:ink,font:{size:12}},ticks:{display:false},suggestedMin:0,suggestedMax:100}}}});
+
+new Chart(funnel,{type:'bar',data:{labels:['Visitors','Registrants','Attendees','Buyers','Paid (net)'],
+  datasets:[{data:[2500,750,300,90,27],backgroundColor:[C,'#4a9eea',gold,'#5fd383',B],borderRadius:8,barPercentage:.62}]},
+  options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw.toLocaleString()}}},
+  scales:{y:{...g,title:{display:true,text:'count / variant',color:faint}},x:noG}}});
+
+new Chart(persub,{type:'line',data:{labels:['≤100','150','194','300'],
+  datasets:[{data:[0.97,0.85,0.79,0.72],borderColor:C,backgroundColor:'rgba(0,113,227,.08)',
+    fill:true,tension:.35,pointBackgroundColor:C,pointRadius:5,borderWidth:2.5}]},
+  options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+c.raw.toFixed(2)+'/sub/mo'}}},
+  scales:{y:{...g,suggestedMin:0.6,suggestedMax:1,ticks:{color:faint,callback:v=>'$'+v.toFixed(2)},title:{display:true,text:'effective $/sub/mo',color:faint}},
+    x:{...noG,title:{display:true,text:'sub-accounts',color:faint}}}}});
+
+new Chart(cash,{type:'bar',data:{labels:['Annual $970','Full + bonuses','3-pay $388×3','Old trial drip'],
+  datasets:[{data:[8900,9650,13000,3700],backgroundColor:[C,'#4a9eea',B,'#d2d2d7'],borderRadius:8,barPercentage:.62}]},
+  options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'~$'+c.raw.toLocaleString()}}},
+  scales:{x:{...g,ticks:{color:faint,callback:v=>'$'+(v/1000)+'k'},title:{display:true,text:'90-day cash / 100 attendees',color:faint}},y:noG}}});
+</script>
+</body>
+</html>

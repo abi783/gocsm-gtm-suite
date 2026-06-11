@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoCSM Trigger Playbook — CSM Actions</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#fbfbfd; --surface:#ffffff; --surface2:#f5f5f7;
+    --ink:#1d1d1f; --muted:#6e6e73; --faint:#86868b; --line:#e4e4e7;
+    --A:#ff3b30; --B:#34c759; --C:#0071e3; --gold:#ff9f0a; --accent:#5e5ce6;
+    --r:20px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Inter,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+  a{color:var(--C);text-decoration:none}
+  .wrap{display:grid;grid-template-columns:236px 1fr;max-width:1320px;margin:0 auto}
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:30px 18px;
+    backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.8);border-right:1px solid var(--line)}
+  nav .brand{font-weight:600;font-size:16px;margin:0 8px 16px;letter-spacing:-.02em}
+  nav .brand b{color:var(--C)}
+  nav h4{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:18px 8px 6px;font-weight:600}
+  nav a{display:block;padding:6px 10px;border-radius:8px;color:var(--muted);font-size:13px}
+  nav a:hover{background:var(--surface2);color:var(--ink)}
+  main{padding:60px 56px 120px;min-width:0}
+  section{scroll-margin-top:24px;margin-bottom:84px}
+
+  .eyebrow{font-size:13px;font-weight:600;color:var(--C);margin:0 0 10px;text-transform:uppercase}
+  h1{font-size:52px;line-height:1.05;letter-spacing:-.03em;font-weight:650;margin:0 0 18px;max-width:16ch}
+  h1 .g{background:linear-gradient(110deg,var(--C),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .deck{font-size:21px;color:var(--muted);max-width:720px;line-height:1.45}
+  h2{font-size:36px;letter-spacing:-.025em;font-weight:650;margin:0 0 12px}
+  h2 .sub{display:block;font-size:18px;color:var(--faint);font-weight:400;margin-top:6px;letter-spacing:-.01em}
+  h3{font-size:18px;font-weight:600;margin:0 0 8px;letter-spacing:-.015em}
+  .part{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+
+  .row{display:grid;gap:20px}
+  .c2{grid-template-columns:repeat(2,1fr)}
+  .c3{grid-template-columns:repeat(3,1fr)}
+  .c4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .card p{margin:0;color:var(--muted);font-size:14.5px}
+  .tint{background:var(--surface2);border:none}
+
+  .stat{font-size:46px;font-weight:650;letter-spacing:-.04em;line-height:1}
+  .stat .u{font-size:20px;color:var(--faint);font-weight:500}
+  .stat.a{color:var(--A)} .stat.b{color:var(--B)} .stat.c{color:var(--C)} .stat.g{color:var(--gold)}
+  .statlbl{color:var(--muted);font-size:14px;margin-top:10px;line-height:1.4}
+
+  /* play cards */
+  .play{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 2px rgba(0,0,0,.04);overflow:hidden;margin-bottom:22px}
+  .play .head{padding:22px 26px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .play .head h3{margin:0;font-size:20px}
+  .play .head .key{font-family:ui-monospace,SF Mono,Menlo,monospace;font-size:11.5px;color:var(--faint);margin-top:3px;display:block}
+  .sev{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:5px 11px;border-radius:999px;white-space:nowrap}
+  .sevR{background:rgba(255,59,48,.1);color:var(--A)}
+  .sevY{background:rgba(255,159,10,.12);color:#b26a00}
+  .sevG{background:rgba(52,199,89,.12);color:#248a3d}
+  .sevB{background:rgba(0,113,227,.08);color:var(--C)}
+  .play .body{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .play .col{padding:18px 22px;border-right:1px solid var(--line)}
+  .play .col:last-child{border-right:none}
+  .play .col h5{margin:0 0 8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  .play .col ul{list-style:none;margin:0;padding:0}
+  .play .col li{font-size:13.5px;color:var(--muted);padding:4px 0 4px 16px;position:relative;line-height:1.4}
+  .play .col li::before{content:"";position:absolute;left:0;top:11px;width:5px;height:5px;border-radius:50%;background:var(--C)}
+  .play .col.auto li::before{background:var(--gold)}
+  .play .col.human li::before{background:var(--A)}
+  .play .col li b{color:var(--ink)}
+  .play .foot{padding:12px 26px;background:var(--surface2);font-size:13px;color:var(--muted)}
+  .play .foot b{color:var(--ink)}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:12px 15px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  tr:last-child td{border-bottom:none}
+  .tbl{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  td.red{color:var(--A);font-weight:600} td.grn{color:#248a3d;font-weight:600} td.yel{color:#b26a00;font-weight:600}
+
+  .chartbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .chartbox h3{margin-bottom:2px}
+  .chartbox .cap{color:var(--faint);font-size:13px;margin:0 0 16px}
+  .cv{position:relative;height:280px}
+  .mermaid{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;overflow-x:auto;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+
+  ul.list{list-style:none;padding:0;margin:0}
+  ul.list li{padding:9px 0 9px 24px;position:relative;color:var(--muted);font-size:14.5px;border-bottom:1px solid var(--line)}
+  ul.list li:last-child{border-bottom:none}
+  ul.list li::before{content:"";position:absolute;left:2px;top:15px;width:6px;height:6px;border-radius:50%;background:var(--C)}
+  ul.list li b{color:var(--ink);font-weight:600}
+
+  .note{background:var(--surface2);border-radius:14px;padding:16px 20px;font-size:14.5px;color:var(--muted);margin:18px 0}
+  .note b{color:var(--ink)}
+  .note.warn{background:rgba(255,159,10,.08)}
+  .note.punch{background:rgba(0,113,227,.06);font-size:16px;color:var(--ink);font-weight:500;line-height:1.45}
+
+  .foot{color:var(--faint);font-size:12.5px;text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
+  @media(max-width:1080px){.wrap{grid-template-columns:1fr}nav{display:none}main{padding:32px 20px}
+    h1{font-size:36px}h2{font-size:28px}.c2,.c3,.c4{grid-template-columns:1fr}.play .body{grid-template-columns:1fr}.play .col{border-right:none;border-bottom:1px solid var(--line)}}
+
+  /* shared top bar */
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:50;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.85);border-bottom:1px solid var(--line)}
+  .topbar .home{font-weight:600;font-size:14px;color:var(--ink);letter-spacing:-.01em}
+  .topbar .home b{color:var(--C)}
+  .topbar .links{display:flex;gap:4px;flex-wrap:wrap}
+  .topbar .links a{font-size:13px;color:var(--muted);padding:6px 12px;border-radius:8px}
+  .topbar .links a:hover{background:var(--surface2);color:var(--ink)}
+  .topbar .links a.active{background:var(--surface2);color:var(--ink);font-weight:600}
+  .wrap{margin-top:52px}
+  nav{top:52px;height:calc(100vh - 52px)}
+  @media(max-width:1080px){.topbar{position:static}.wrap{margin-top:0}}
+</style>
+</head>
+<body>
+<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Home</a><a href="funnel.html">Funnel & Pricing</a><a href="content.html">Content Brief</a><a href="triggers.html" class="active">Trigger Playbook</a><a href="guarantee.html">Guarantee</a></div></div>
+<div class="wrap">
+<nav>
+  <div class="brand">Go<b>CSM</b> · Trigger Playbook</div>
+  <h4>Foundations</h4>
+  <a href="#top">The operating loop</a>
+  <a href="#severity">Severity model</a>
+  <h4>Rescue Plays</h4>
+  <a href="#p-payment" style="color:var(--A)">Payment Failed</a>
+  <a href="#p-health" style="color:var(--A)">Health Score Changed</a>
+  <a href="#p-renewal" style="color:#b26a00">Upcoming Renewal</a>
+  <h4>Adoption Plays</h4>
+  <a href="#p-inactivity">Inactivity Alert</a>
+  <a href="#p-engagement">Engagement Changed</a>
+  <a href="#p-timespent">Time-Spent Changed</a>
+  <a href="#p-asset">Asset Activation</a>
+  <a href="#p-adoption8">Low Time Since Signup</a>
+  <a href="#p-adoption9">Assets Empty</a>
+  <h4>System</h4>
+  <a href="#stacks">Composite stacks</a>
+  <a href="#starter">Starter pack (12 instances)</a>
+  <a href="#cadence">CSM weekly cadence</a>
+</nav>
+
+<main>
+<!-- HERO -->
+<section id="top">
+  <p class="eyebrow">9 triggers · 9 plays · 1 operating system</p>
+  <h1>Every trigger gets<br>a <span class="g">play.</span></h1>
+  <p class="deck">GoCSM's nine production triggers, each mapped to: recommended configuration → automated GHL workflow → human CSM action → escalation rule → success metric. Grounded in Gainsight/ChurnZero playbook patterns, Recurly dunning data, and 90-day renewal research.</p>
+
+  <div class="row c4" style="margin-top:40px">
+    <div class="card"><div class="stat c">9</div><div class="statlbl">live triggers in the GHL marketplace engine</div></div>
+    <div class="card"><div class="stat b">58<span class="u">%</span></div><div class="statlbl">of failed payments recover via smart retries alone (Recurly 2025)</div></div>
+    <div class="card"><div class="stat g">15–20<span class="u">%</span></div><div class="statlbl">higher renewal rates when outreach starts at T-90</div></div>
+    <div class="card"><div class="stat a">72→94<span class="u">%</span></div><div class="statlbl">on-time renewal lift from automated T-90 workflows</div></div>
+  </div>
+
+  <h3 style="margin:36px 0 12px">The operating loop — automation handles speed, humans handle judgment</h3>
+  <div class="mermaid">
+flowchart LR
+  T["⚡ Trigger fires<br/>(GoCSM engine)"] --> W["🤖 GHL workflow<br/>instant, personalized,<br/>uses payload fields"]
+  W --> Q["📋 CSM task queued<br/>if severity ≥ yellow"]
+  Q --> H["👤 Human play<br/>call · QBR · save offer"]
+  H --> E["⬆️ Escalate<br/>founder/exec if red ×2"]
+  H --> M["📊 Log outcome<br/>feeds next health score"]
+  </div>
+  <div class="note punch">The Gainsight-era gap is the lag between "score drops" and "customer hears from you." The fix: <b>the workflow responds in minutes, the CSM responds in hours, the founder responds in days — and severity decides which.</b></div>
+</section>
+
+<!-- SEVERITY -->
+<section id="severity">
+  <h2>The severity model<span class="sub">Every fire is triaged into one of four lanes before anyone acts.</span></h2>
+  <div class="tbl">
+    <table>
+      <tr><th>Lane</th><th>Definition</th><th>Response SLA</th><th>Who acts</th></tr>
+      <tr><td class="grn">🟢 Green · Expansion</td><td>Positive signal (engagement up, health ≥80)</td><td>This week</td><td>Workflow + CSM (upsell motion)</td></tr>
+      <tr><td><span style="color:var(--C);font-weight:600">🔵 Blue · Nudge</span></td><td>Single early signal on a healthy account</td><td>Automated only</td><td>Workflow; CSM sees digest</td></tr>
+      <tr><td class="yel">🟡 Yellow · Intervene</td><td>Mid signal, or 2 signals on one account</td><td>48 hours</td><td>Workflow + CSM task</td></tr>
+      <tr><td class="red">🔴 Red · Rescue</td><td>Health &lt;40, renewal &lt;60d at risk, payment failed ×2, or 3+ signals</td><td>Same day</td><td>CSM call + founder visibility</td></tr>
+    </table>
+  </div>
+  <div class="note"><b>The compounding rule from the masterclass applies here too:</b> one signal = watch (blue), two = act this week (yellow), three+ = that account is canceling (red). Use <code>accountPriority</code> on every trigger instance to fast-lane your top-MRR accounts.</div>
+</section>
+
+<!-- ============ RESCUE PLAYS ============ -->
+<section id="p-payment">
+  <p class="part">Rescue play 1 · involuntary churn — the most fixable kind</p>
+  <h2>Payment Failed<span class="sub">Polls every 3h. 20–40% of all churn is involuntary; dunning with direct card-links converts 2.3× better.</span></h2>
+  <div class="play">
+    <div class="head">
+      <div><h3>The Dunning Rescue</h3><span class="key">saas_payment_failed · payload: failureReason, paymentType, amount, ownerEmail</span></div>
+      <span class="sev sevR">🔴 Red if ×2 · 🟡 first failure</span>
+    </div>
+    <div class="body">
+      <div class="col">
+        <h5>⚙️ Configure</h5>
+        <ul>
+          <li>Instance 1: all plans, <b>subscription</b> payments</li>
+          <li>Instance 2: <b>accountPriority = true</b> → separate fast-lane workflow</li>
+          <li>revisitInterval <b>1d</b> — repeat failures must re-fire</li>
+        </ul>
+      </div>
+      <div class="col auto">
+        <h5>🤖 Automated (minutes)</h5>
+        <ul>
+          <li>T+0: friendly email — assume innocence, <b>direct card-update link</b> (2.3× conversion)</li>
+          <li>T+48h: SMS nudge (4 retries / 3–4 emails / 1 SMS over 14 days is the benchmark sequence)</li>
+          <li>Tag account <b>payment-risk</b>; never suspend silently</li>
+        </ul>
+      </div>
+      <div class="col human">
+        <h5>👤 CSM (same day if priority)</h5>
+        <ul>
+          <li>Priority or &gt;$300/mo account: <b>personal call within 24h</b> — "card hiccup, not a collections call"</li>
+          <li>2nd failure: check health score — low health + failed pay = a cancellation in progress, open a save play</li>
+          <li>Never let the contractor say <b>"I figured you didn't notice I was gone"</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><b>Escalate:</b> 3rd failure or downgrade request → founder outreach. <b>Metric:</b> recovery rate (target 60%+), time-to-recovery, % suspended-without-contact = 0.</div>
+  </div>
+</section>
+
+<section id="p-health">
+  <p class="part">Rescue play 2 · the composite signal</p>
+  <h2>Health Score Changed<span class="sub">Fires daily post-scoring. The payload carries per-dimension sub-scores — that's your diagnosis, not just your alarm.</span></h2>
+  <div class="play">
+    <div class="head">
+      <div><h3>The Diagnostic Save</h3><span class="key">health_score_changed · payload: pasScore, revenueScore, loginScore, npsScore, scoreHistory, lifecycleStage</span></div>
+      <span class="sev sevR">🔴 score_below 40 · 🟡 score_down_by 10</span>
+    </div>
+    <div class="body">
+      <div class="col">
+        <h5>⚙️ Configure (3 instances)</h5>
+        <ul>
+          <li><b>score_down_by 10</b>, window 7d → yellow lane</li>
+          <li><b>score_below 40</b>, window 1d, revisit 30d → red lane</li>
+          <li><b>score_above 80</b> → green lane (expansion — see stacks)</li>
+        </ul>
+      </div>
+      <div class="col auto">
+        <h5>🤖 Automated</h5>
+        <ul>
+          <li>Yellow: value-recap email — "here's what your system did this month" (leads, bookings)</li>
+          <li>Red: book-a-call link + CSM task with <b>sub-scores in the task body</b></li>
+          <li>Tag with the falling dimension (adoption/revenue/sentiment/login)</li>
+        </ul>
+      </div>
+      <div class="col human">
+        <h5>👤 CSM — diagnose by dimension</h5>
+        <ul>
+          <li><b>pasScore fell</b> → adoption play: re-onboard the abandoned feature</li>
+          <li><b>revenueScore fell</b> → upstream problem: their ad spend / lead flow dried up — fix the input, not the tool</li>
+          <li><b>npsScore fell</b> → call, don't email. A detractor who's talking is still saveable</li>
+          <li><b>loginScore alone</b> → lowest weight, watch only</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><b>Escalate:</b> red + renewal &lt;60d → drop everything (the rescue stack). <b>Metric:</b> % of red accounts contacted same-day; 30-day score recovery rate.</div>
+  </div>
+</section>
+
+<section id="p-renewal">
+  <p class="part">Rescue play 3 · the deadline every other signal feeds</p>
+  <h2>Upcoming Plan Renewal<span class="sub">healthStatus filter makes this three different plays. T-90 starts achieve 15–20% higher renewal rates; late saves cost ~12% in discounts.</span></h2>
+  <div class="play">
+    <div class="head">
+      <div><h3>The Renewal Ladder</h3><span class="key">upcoming_plan_renewal · payload: renewalDate, daysUntilRenewal, healthBand, paymentFrequency</span></div>
+      <span class="sev sevY">Lane depends on healthBand</span>
+    </div>
+    <div class="body">
+      <div class="col">
+        <h5>⚙️ Configure (3 instances)</h5>
+        <ul>
+          <li><b>T-30 · all bands</b> → pipeline entry + health check digest</li>
+          <li><b>T-30 · at_risk + watch</b> → save play, annual plans first</li>
+          <li><b>T-7 · thriving + healthy</b> → anniversary / expansion touch</li>
+        </ul>
+      </div>
+      <div class="col auto">
+        <h5>🤖 Automated</h5>
+        <ul>
+          <li>T-30 healthy: "your year in numbers" ROI recap email — renewal framed as momentum, not invoice</li>
+          <li>T-30 at-risk: <b>no renewal mention yet</b> — value-first re-engagement + booking link</li>
+          <li>T-7: confirm card on file is current (pre-dunning prevents 35–40% of expiry failures)</li>
+        </ul>
+      </div>
+      <div class="col human">
+        <h5>👤 CSM — the green/yellow/red ladder</h5>
+        <ul>
+          <li><b>Green:</b> lightweight — thank-you + expansion question</li>
+          <li><b>Yellow:</b> consultative QBR — usage review in <b>their</b> language (leads/bookings/revenue vs fee)</li>
+          <li><b>Red:</b> save play — diagnose with sub-scores, fix the named issue, re-onboard. <b>A discount is the last lever, not the first</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><b>Escalate:</b> red at T-30 → founder/exec sponsor call (the documented red-account playbook). <b>Metric:</b> on-time renewal rate (benchmark lift 72→94%), save rate on at_risk renewals, discount % conceded.</div>
+  </div>
+</section>
+
+<!-- ============ ADOPTION PLAYS ============ -->
+<section id="p-inactivity">
+  <p class="part">Adoption play 1 · relationship risk, not just usage risk</p>
+  <h2>Inactivity Alert<span class="sub">Per-user per-location. A key user gone dark is single-point-of-failure risk — multi-thread before they leave.</span></h2>
+  <div class="play">
+    <div class="head">
+      <div><h3>The Re-Engagement Ladder</h3><span class="key">inactivity_alert · payload: userRole, isKeyUser, daysSinceLastLogin, userEmail</span></div>
+      <span class="sev sevB">🔵 7d · 🟡 key user 14d · 🔴 owner 30d</span>
+    </div>
+    <div class="body">
+      <div class="col">
+        <h5>⚙️ Configure (3 instances)</h5>
+        <ul>
+          <li><b>7d · all users</b> → automated nudge only, revisit 30d</li>
+          <li><b>14d · isKeyUser = true</b> → CSM task</li>
+          <li><b>30d · role = admin</b> → red lane, owner is checked out</li>
+        </ul>
+      </div>
+      <div class="col auto">
+        <h5>🤖 Automated</h5>
+        <ul>
+          <li>7d: "while you were away" email — what the system did for them (appointments booked, leads captured)</li>
+          <li>14d: feature-specific win + 1-click login link</li>
+          <li>Login activity is only 10% of health — <b>never panic on this alone</b></li>
+        </ul>
+      </div>
+      <div class="col human">
+        <h5>👤 CSM</h5>
+        <ul>
+          <li>Key user 14d: personal video message — 60 seconds, their account on screen</li>
+          <li>Owner 30d: call. The quiet-phase breakup starts here — slower replies, fewer approvals</li>
+          <li>Key user <b>left the company?</b> → re-onboard the replacement within 7 days (highest-risk moment in the account's life)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><b>Metric:</b> reactivation rate within 14 days of fire; % of accounts with ≥2 active users (multi-threading coverage).</div>
+  </div>
+</section>
+
+<section id="p-engagement">
+  <p class="part">Adoption play 2 · the velocity drop — the Day 45–75 predictor</p>
+  <h2>Feature Engagement Changed<span class="sub">WoW/MoM volume per feature. Decreased 30% = the most reliable early churn predictor; increased = expansion fuel.</span></h2>
+  <div class="play">
+    <div class="head">
+      <div><h3>The Velocity Check</h3><span class="key">feature_engagement_changed · payload: featureName, wow/mom old/new values, direction</span></div>
+      <span class="sev sevY">🟡 −30% WoW · 🟢 +50% MoM</span>
+    </div>
+    <div class="body">
+      <div class="col">
+        <h5>⚙️ Configure (2 instances)</h5>
+        <ul>
+          <li><b>decreased · 30% · WoW</b> → yellow lane</li>
+          <li><b>increased · 50% · MoM</b> → green lane (expansion signal)</li>
+          <li>Scope to revenue features: Workflows, SMS, Email, Payments</li>
+        </ul>
+      </div>
+      <div class="col auto">
+        <h5>🤖 Automated</h5>
+        <ul>
+          <li>Decrease: feature-specific tip + template ("3 reactivation campaigns that book appointments")</li>
+          <li>Increase: congratulate with the numbers — make the win visible to the owner</li>
+        </ul>
+      </div>
+      <div class="col human">
+        <h5>👤 CSM — find the upstream cause</h5>
+        <ul>
+          <li>Volume drops are usually <b>upstream</b>: ad spend cut, staff change, seasonal dip — ask before prescribing</li>
+          <li>The gym story: 400→220→90 SMS wasn't a GHL problem, it was a lead-flow problem. Solve <b>their</b> business problem and you're unfireable</li>
+          <li>Increase + healthy: feed the expansion stack</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><b>Metric:</b> % of −30% fires that recover volume within 30 days; expansion conversations opened from +50% fires.</div>
+  </div>
+</section>
+
+<section id="p-timespent">
+  <p class="part">Adoption play 3 · depth, not volume</p>
+  <h2>Feature Time-Spent Changed<span class="sub">Minutes-in-feature, 12 features. Falling time-spent with stable volume = they're disengaging from the tool itself.</span></h2>
+  <div class="play">
+    <div class="head">
+      <div><h3>The Depth Gauge</h3><span class="key">feature_time_spent_changed · payload: featureName, wow/mom mins, direction</span></div>
+      <span class="sev sevB">🔵 −50% MoM · 🟢 +75% on new feature</span>
+    </div>
+    <div class="body">
+      <div class="col">
+        <h5>⚙️ Configure</h5>
+        <ul>
+          <li><b>decreased · 50% · MoM</b> — looser than engagement (time data is noisier)</li>
+          <li><b>increased · 75%</b> on Dashboards/Reputation/Memberships → someone is exploring — strike while warm</li>
+        </ul>
+      </div>
+      <div class="col auto">
+        <h5>🤖 Automated</h5>
+        <ul>
+          <li>Decrease: pair with engagement data before acting — time alone is blue-lane</li>
+          <li>Increase on unowned feature: send the setup guide for exactly that feature within the hour</li>
+        </ul>
+      </div>
+      <div class="col human">
+        <h5>👤 CSM</h5>
+        <ul>
+          <li>Exploring a premium-adjacent feature (Memberships, Reputation)? → 15-min "want me to set this up with you?" offer — the easiest expansion call you'll ever book</li>
+          <li>Time falling across <b>all</b> features → treat as Signal 3 (ghost account), check stale assets</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><b>Metric:</b> setup-call bookings from increase-fires; % of all-feature declines escalated to ghost-account review.</div>
+  </div>
+</section>
+
+<section id="p-asset">
+  <p class="part">Adoption play 4 · built but never switched on</p>
+  <h2>Asset Activation Pending<span class="sub">A drafted workflow, a bought phone number, an unverified email domain — friction sitting between the client and first value.</span></h2>
+  <div class="play">
+    <div class="head">
+      <div><h3>The Activation Sweep</h3><span class="key">asset_activation_pending · payload: featureName, assetName, daysSinceCreated</span></div>
+      <span class="sev sevB">🔵 3d · 🟡 14d on core assets</span>
+    </div>
+    <div class="body">
+      <div class="col">
+        <h5>⚙️ Configure (2 instances)</h5>
+        <ul>
+          <li><b>More than 3 days</b> · Workflows + Phone Numbers + Email Domains → nudge</li>
+          <li><b>More than 14 days</b> · all features → CSM task</li>
+        </ul>
+      </div>
+      <div class="col auto">
+        <h5>🤖 Automated</h5>
+        <ul>
+          <li>3d: "your {assetName} is one click from live" — deep link + 2-min how-to video for that asset type</li>
+          <li>Unverified email domain / unconfigured phone = <b>their campaigns literally can't send</b> — flag as blocking</li>
+        </ul>
+      </div>
+      <div class="col human">
+        <h5>👤 CSM</h5>
+        <ul>
+          <li>14d: offer to finish it <b>for</b> them on a 15-min screen-share — done-for-you beats one more tutorial</li>
+          <li>Multiple pending assets on one account = an onboarding that stalled, not a lazy client — restart the onboarding track</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><b>Metric:</b> activation rate within 7 days of fire; median days-to-activation by asset type.</div>
+  </div>
+</section>
+
+<section id="p-adoption8">
+  <p class="part">Adoption play 5 · the onboarding gate (time)</p>
+  <h2>Low Time-Spent Since Signup<span class="sub">Age-gated: fires when a new account hasn't invested X minutes by Day Y. This is your time-to-first-value alarm.</span></h2>
+  <div class="play">
+    <div class="head">
+      <div><h3>The TTFV Gate</h3><span class="key">gocsm_feature_time_spent_less_than_x_since_signup · payload: lowEngagementFeatures, daysSinceSignup</span></div>
+      <span class="sev sevY">🟡 Day 7 · 🔴 Day 14 unresolved</span>
+    </div>
+    <div class="body">
+      <div class="col">
+        <h5>⚙️ Configure (2 instances)</h5>
+        <ul>
+          <li><b>Day 7 · &lt;30 min</b> on Workflows + Calendars + Conversations</li>
+          <li><b>Day 14 · &lt;30 min</b> → red-lane re-onboard, revisit 30d</li>
+        </ul>
+      </div>
+      <div class="col auto">
+        <h5>🤖 Automated</h5>
+        <ul>
+          <li>Day 7: restart the onboarding email track for the listed features — short, single-CTA steps</li>
+          <li>Book-a-setup-call link in every touch</li>
+        </ul>
+      </div>
+      <div class="col human">
+        <h5>👤 CSM</h5>
+        <ul>
+          <li>Day 14: <b>call, don't email.</b> Completed onboarding churns ~8% at 90 days vs ~25% incomplete — this call is the highest-ROI hour in the book</li>
+          <li>Re-anchor to <b>their</b> first-value moment: first booked appointment, first lead — not "finish the setup"</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><b>Metric:</b> % of new accounts hitting first value by Day 30 (target ≥60%); Day-14 fire rate trending down month over month.</div>
+  </div>
+</section>
+
+<section id="p-adoption9">
+  <p class="part">Adoption play 6 · the onboarding gate (breadth)</p>
+  <h2>Assets Empty Since Signup<span class="sub">Fires when whole features were never explored by Day Y. Multi-feature users retain ~70% better — this is the breadth alarm.</span></h2>
+  <div class="play">
+    <div class="head">
+      <div><h3>The Breadth Builder</h3><span class="key">gocsm_feature_assets_empty_since_signup · payload: emptyFeatures, emptyCount, daysSinceSignup</span></div>
+      <span class="sev sevY">🟡 Day 7 ≥3 empty · 🔴 Day 30 ≥5 empty</span>
+    </div>
+    <div class="body">
+      <div class="col">
+        <h5>⚙️ Configure (2 instances)</h5>
+        <ul>
+          <li><b>Day 7</b> · all 8 features → map the gap</li>
+          <li><b>Day 30</b> → escalation lane for never-launched accounts</li>
+        </ul>
+      </div>
+      <div class="col auto">
+        <h5>🤖 Automated</h5>
+        <ul>
+          <li>One feature at a time — never "here are 5 things you haven't done." Pick the highest-value empty feature for <b>their vertical</b> (gym → calendars; contractor → phone; realtor → reputation)</li>
+          <li>Template-first: "here's a pre-built workflow, click import"</li>
+        </ul>
+      </div>
+      <div class="col human">
+        <h5>👤 CSM</h5>
+        <ul>
+          <li>Day 30 ≥5 empty: this client bought software they never unboxed — full re-onboarding session, treat as a brand-new account</li>
+          <li>Pair with the agency's delivery checklist: empty features sometimes mean the <b>agency</b> never built what was sold (the expectations time-bomb)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><b>Metric:</b> features-adopted-by-Day-30 distribution; % of accounts at 3+ features (the retention cliff edge).</div>
+  </div>
+</section>
+
+<!-- STACKS -->
+<section id="stacks">
+  <p class="part">Where the system beats single alerts</p>
+  <h2>Composite stacks<span class="sub">Single triggers are signals. Combinations are verdicts — wire these as tag-based meta-plays in GHL.</span></h2>
+  <div class="row c2">
+    <div class="card" style="border-top:3px solid var(--A)">
+      <h3>🚨 The Rescue Stack</h3>
+      <p style="margin-bottom:10px"><b>health &lt;40</b> + <b>renewal &lt;60d</b> (+ any payment failure)</p>
+      <ul class="list">
+        <li>Drop everything — this is a cancellation in progress</li>
+        <li>CSM call same day; founder visibility same week</li>
+        <li>Fix the named issue first; discount last</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--B)">
+      <h3>📈 The Expansion Stack</h3>
+      <p style="margin-bottom:10px"><b>score_above 80</b> + <b>engagement/time increased</b> + renewal upcoming</p>
+      <ul class="list">
+        <li>The 5 churn signals in reverse = upsell-ready</li>
+        <li>Offer the next tier / more locations at the T-30 touch</li>
+        <li>Also: case-study &amp; referral ask — promoters convert at 60–70%</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <h3>👻 The Ghost Stack</h3>
+      <p style="margin-bottom:10px"><b>inactivity 30d</b> + <b>time-spent down all features</b> + no new assets</p>
+      <ul class="list">
+        <li>The account is on life support — old automations mask it</li>
+        <li>Relationship play, not feature play: "what changed in your business?"</li>
+        <li>45–90 day fuse — longest warning you'll ever get. Use it</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--C)">
+      <h3>🐣 The Launch Stack</h3>
+      <p style="margin-bottom:10px"><b>low time-spent Day 7</b> + <b>assets empty Day 7</b> + asset pending</p>
+      <ul class="list">
+        <li>Onboarding has stalled in week one — intervene before habit windows close</li>
+        <li>Goal: first value ≤14 days (the master retention metric)</li>
+        <li>One feature, one win, celebrated loudly</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- STARTER PACK -->
+<section id="starter">
+  <h2>The starter pack<span class="sub">The 17 trigger instances to create on day one — copy this table into setup.</span></h2>
+  <div class="tbl">
+    <table>
+      <tr><th>Trigger</th><th>Config</th><th>Lane</th><th>Workflow action</th></tr>
+      <tr><td>Payment Failed</td><td>subscription · all plans · revisit 1d</td><td class="yel">🟡</td><td>Dunning email T+0, SMS T+48h</td></tr>
+      <tr><td>Payment Failed</td><td>accountPriority = true</td><td class="red">🔴</td><td>+ CSM task, call in 24h</td></tr>
+      <tr><td>Renewal</td><td>T-30 · all bands</td><td class="sevB">🔵</td><td>ROI recap email, pipeline entry</td></tr>
+      <tr><td>Renewal</td><td>T-30 · at_risk + watch · annual</td><td class="red">🔴</td><td>Save play, CSM QBR task</td></tr>
+      <tr><td>Renewal</td><td>T-7 · thriving + healthy</td><td class="grn">🟢</td><td>Anniversary + card-on-file check</td></tr>
+      <tr><td>Health Score</td><td>score_down_by 10 · 7d window</td><td class="yel">🟡</td><td>Value recap + tagged dimension</td></tr>
+      <tr><td>Health Score</td><td>score_below 40 · revisit 30d</td><td class="red">🔴</td><td>CSM task w/ sub-scores</td></tr>
+      <tr><td>Health Score</td><td>score_above 80 · revisit 90d</td><td class="grn">🟢</td><td>Expansion / referral motion</td></tr>
+      <tr><td>Inactivity</td><td>7d · all users · revisit 30d</td><td class="sevB">🔵</td><td>"While you were away" email</td></tr>
+      <tr><td>Inactivity</td><td>14d · isKeyUser</td><td class="yel">🟡</td><td>CSM personal video</td></tr>
+      <tr><td>Inactivity</td><td>30d · admins</td><td class="red">🔴</td><td>CSM call — owner checked out</td></tr>
+      <tr><td>Engagement</td><td>decreased 30% WoW · core features</td><td class="yel">🟡</td><td>Feature tip + upstream-cause task</td></tr>
+      <tr><td>Engagement</td><td>increased 50% MoM</td><td class="grn">🟢</td><td>Celebrate + expansion feed</td></tr>
+      <tr><td>Time-Spent</td><td>increased 75% · premium features</td><td class="grn">🟢</td><td>Setup-guide within the hour</td></tr>
+      <tr><td>Asset Pending</td><td>&gt;3d · workflows/phone/email</td><td class="sevB">🔵</td><td>One-click activation nudge</td></tr>
+      <tr><td>Low Time Signup</td><td>Day 7 · &lt;30 min · core 3</td><td class="yel">🟡</td><td>Onboarding restart track</td></tr>
+      <tr><td>Assets Empty</td><td>Day 7 · all features</td><td class="yel">🟡</td><td>Vertical-matched single-feature nudge</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- CADENCE -->
+<section id="cadence">
+  <h2>The CSM weekly cadence<span class="sub">Triggers feed the queue; this is how a human works it.</span></h2>
+  <div class="row c2">
+    <div class="card">
+      <h3>Daily (30 min)</h3>
+      <ul class="list">
+        <li><b>Red lane first</b> — same-day SLA: rescue stacks, payment ×2, score &lt;40</li>
+        <li>Scan yellow queue, claim tasks, book calls</li>
+        <li>Log every outcome — it feeds tomorrow's score</li>
+      </ul>
+      <h3 style="margin-top:20px">Weekly (90 min)</h3>
+      <ul class="list">
+        <li>Portfolio review: sort by health band, check band migrations</li>
+        <li>Expansion stack review — who moved to green this week?</li>
+        <li>Fire-rate review: which trigger fired most? That's this month's systemic fix</li>
+      </ul>
+    </div>
+    <div class="chartbox">
+      <h3>Effort follows lead time</h3>
+      <p class="cap">Where CSM hours go, by lane — rescue is expensive, prevention is cheap. The system's job is shifting the mix left.</p>
+      <div class="cv"><canvas id="effort"></canvas></div>
+    </div>
+  </div>
+  <div class="note punch" style="margin-top:24px"><b>The L3 bridge:</b> every play in this document is also a sales asset. "You caught 3 at-risk clients this quarter — want us to run this whole playbook for you?" is the Day-90 QBR line that sells the $500–1,500/mo CSM retainer.</div>
+  <div class="foot">GoCSM Trigger Playbook · v1.0 · 2026-06-11 · built on the 9 production triggers in ghl-trigger-engine · benchmarks: Recurly 2025, ChurnZero/Gainsight playbook patterns, 90-day renewal research.</div>
+</section>
+</main>
+</div>
+
+<script>
+const ink='#1d1d1f',muted='#6e6e73',faint='#86868b',line='#e4e4e7';
+const A='#ff3b30',B='#34c759',C='#0071e3',gold='#ff9f0a',accent='#5e5ce6';
+mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{
+  fontFamily:'-apple-system,SF Pro Text,Inter,sans-serif',fontSize:'13px',
+  primaryColor:'#f5f5f7',primaryTextColor:ink,primaryBorderColor:line,
+  lineColor:'#c7c7cc',secondaryColor:'#fff',tertiaryColor:'#fff'}});
+Chart.defaults.color=muted;Chart.defaults.font.family='-apple-system,SF Pro Text,Inter,sans-serif';
+Chart.defaults.font.size=13;Chart.defaults.borderColor=line;
+
+new Chart(effort,{type:'bar',data:{
+  labels:['🔵 Nudge (automated)','🟢 Expansion','🟡 Intervene','🔴 Rescue'],
+  datasets:[
+    {label:'CSM minutes / account',data:[2,20,45,120],backgroundColor:[C,B,gold,A],borderRadius:8,barPercentage:.6}
+  ]},
+  options:{indexAxis:'y',plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:c=>'~'+c.raw+' min / account'}}},
+  scales:{x:{grid:{color:line},ticks:{color:faint},title:{display:true,text:'human minutes per account touched',color:faint}},y:{grid:{display:false},ticks:{color:faint}}}}});
+</script>
+</body>
+</html>

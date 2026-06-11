@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoCSM Guarantee — Risk-Reversal Design</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#fbfbfd; --surface:#ffffff; --surface2:#f5f5f7;
+    --ink:#1d1d1f; --muted:#6e6e73; --faint:#86868b; --line:#e4e4e7;
+    --A:#ff3b30; --B:#34c759; --C:#0071e3; --gold:#ff9f0a; --accent:#5e5ce6;
+    --r:20px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Inter,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+  a{color:var(--C);text-decoration:none}
+  .wrap{display:grid;grid-template-columns:236px 1fr;max-width:1320px;margin:0 auto}
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;padding:30px 18px;
+    backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.8);border-right:1px solid var(--line)}
+  nav .brand{font-weight:600;font-size:16px;margin:0 8px 16px;letter-spacing:-.02em}
+  nav .brand b{color:var(--C)}
+  nav h4{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:18px 8px 6px;font-weight:600}
+  nav a{display:block;padding:6px 10px;border-radius:8px;color:var(--muted);font-size:13px}
+  nav a:hover{background:var(--surface2);color:var(--ink)}
+  main{padding:60px 56px 120px;min-width:0}
+  section{scroll-margin-top:24px;margin-bottom:84px}
+
+  .eyebrow{font-size:13px;font-weight:600;color:var(--C);margin:0 0 10px;text-transform:uppercase}
+  h1{font-size:52px;line-height:1.05;letter-spacing:-.03em;font-weight:650;margin:0 0 18px;max-width:15ch}
+  h1 .g{background:linear-gradient(110deg,var(--C),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .deck{font-size:21px;color:var(--muted);max-width:700px;line-height:1.45}
+  h2{font-size:36px;letter-spacing:-.025em;font-weight:650;margin:0 0 12px}
+  h2 .sub{display:block;font-size:18px;color:var(--faint);font-weight:400;margin-top:6px;letter-spacing:-.01em}
+  h3{font-size:18px;font-weight:600;margin:0 0 8px;letter-spacing:-.015em}
+  .part{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+
+  .row{display:grid;gap:20px}
+  .c2{grid-template-columns:repeat(2,1fr)}
+  .c3{grid-template-columns:repeat(3,1fr)}
+  .c4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .card p{margin:0;color:var(--muted);font-size:14.5px}
+
+  .stat{font-size:46px;font-weight:650;letter-spacing:-.04em;line-height:1}
+  .stat .u{font-size:20px;color:var(--faint);font-weight:500}
+  .stat.a{color:var(--A)} .stat.b{color:var(--B)} .stat.c{color:var(--C)} .stat.g{color:var(--gold)}
+  .statlbl{color:var(--muted);font-size:14px;margin-top:10px;line-height:1.4}
+
+  .badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;padding:5px 11px;border-radius:999px;margin-bottom:14px}
+  .b1{background:rgba(0,113,227,.1);color:var(--C)}
+  .b2{background:rgba(52,199,89,.12);color:#248a3d}
+
+  /* guarantee layer cards */
+  .layer{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:34px;box-shadow:0 1px 2px rgba(0,0,0,.04);position:relative;overflow:hidden}
+  .layer.l1{border-top:4px solid var(--C)}
+  .layer.l2{border-top:4px solid var(--B)}
+  .layer .promise{font-size:18px;font-weight:500;line-height:1.5;letter-spacing:-.015em;color:var(--ink);
+    background:var(--surface2);border-radius:16px;padding:20px 24px;margin:14px 0 20px}
+  .layer .promise b{font-weight:650}
+
+  .quote{font-size:19px;font-weight:500;color:var(--ink);line-height:1.5;letter-spacing:-.015em;
+    background:linear-gradient(110deg,rgba(0,113,227,.05),rgba(94,92,230,.05));border-radius:18px;padding:26px 30px;border:1px solid rgba(0,113,227,.12)}
+  .quote i{color:var(--muted)}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:12px 15px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  tr:last-child td{border-bottom:none}
+  .tbl{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  td.red{color:var(--A);font-weight:600} td.grn{color:#248a3d;font-weight:600}
+
+  .chartbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .chartbox h3{margin-bottom:2px}
+  .chartbox .cap{color:var(--faint);font-size:13px;margin:0 0 16px}
+  .cv{position:relative;height:280px}
+  .mermaid{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;overflow-x:auto;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+
+  ul.list{list-style:none;padding:0;margin:0}
+  ul.list li{padding:9px 0 9px 24px;position:relative;color:var(--muted);font-size:14.5px;border-bottom:1px solid var(--line)}
+  ul.list li:last-child{border-bottom:none}
+  ul.list li::before{content:"";position:absolute;left:2px;top:15px;width:6px;height:6px;border-radius:50%;background:var(--C)}
+  ul.list li b{color:var(--ink);font-weight:600}
+
+  .note{background:var(--surface2);border-radius:14px;padding:16px 20px;font-size:14.5px;color:var(--muted);margin:18px 0}
+  .note b{color:var(--ink)}
+  .note.warn{background:rgba(255,159,10,.08)}
+  .note.punch{background:rgba(0,113,227,.06);font-size:16px;color:var(--ink);font-weight:500;line-height:1.45}
+
+  .qa{border-bottom:1px solid var(--line);padding:14px 0}
+  .qa:last-child{border-bottom:none}
+  .qa .q{font-weight:600;font-size:15px}
+  .qa .a{color:var(--muted);font-size:14px;font-style:italic;margin-top:4px}
+
+  /* copy block */
+  .copyblock{background:#1d1d1f;color:#f5f5f7;border-radius:24px;padding:36px 40px;box-shadow:0 10px 40px -12px rgba(0,0,0,.3)}
+  .copyblock h3{color:#fff;font-size:22px;margin-bottom:18px}
+  .copyblock p{color:#d2d2d7;font-size:15.5px;line-height:1.6;margin:0 0 14px}
+  .copyblock p b{color:#fff}
+  .copyblock .tag{color:var(--gold);font-style:italic;font-size:15px}
+
+  .foot{color:var(--faint);font-size:12.5px;text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
+  @media(max-width:1080px){.wrap{grid-template-columns:1fr}nav{display:none}main{padding:32px 20px}
+    h1{font-size:36px}h2{font-size:28px}.c2,.c3,.c4{grid-template-columns:1fr}}
+
+  /* shared top bar */
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:50;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.85);border-bottom:1px solid var(--line)}
+  .topbar .home{font-weight:600;font-size:14px;color:var(--ink);letter-spacing:-.01em}
+  .topbar .home b{color:var(--C)}
+  .topbar .links{display:flex;gap:4px;flex-wrap:wrap}
+  .topbar .links a{font-size:13px;color:var(--muted);padding:6px 12px;border-radius:8px}
+  .topbar .links a:hover{background:var(--surface2);color:var(--ink)}
+  .topbar .links a.active{background:var(--surface2);color:var(--ink);font-weight:600}
+  .wrap{margin-top:52px}
+  nav{top:52px;height:calc(100vh - 52px)}
+  @media(max-width:1080px){.topbar{position:static}.wrap{margin-top:0}}
+</style>
+</head>
+<body>
+<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Home</a><a href="funnel.html">Funnel & Pricing</a><a href="content.html">Content Brief</a><a href="triggers.html">Trigger Playbook</a><a href="guarantee.html" class="active">Guarantee</a></div></div>
+<div class="wrap">
+<nav>
+  <div class="brand">Go<b>CSM</b> · Guarantee</div>
+  <h4>Design</h4>
+  <a href="#top">Why this structure</a>
+  <a href="#stack">The two layers</a>
+  <a href="#combined">The webinar line</a>
+  <h4>Mechanics</h4>
+  <a href="#protect">Anti-abuse</a>
+  <a href="#present">Presentation</a>
+  <a href="#workflow">Refund workflow</a>
+  <h4>Operate</h4>
+  <a href="#metrics">Metrics</a>
+  <a href="#copy">Copy block</a>
+</nav>
+
+<main>
+<!-- HERO -->
+<section id="top">
+  <p class="eyebrow">Risk-Reversal Design · replaces the free trial</p>
+  <h1>The Double<br><span class="g">Guarantee.</span></h1>
+  <p class="deck">With the trial gone from the live offer, the guarantee carries 100% of the risk-reversal load. One unconditional layer for trust, one conditional outcome layer for confidence — labor gated past the impulse window, refunds turned into save offers.</p>
+
+  <div class="row c4" style="margin-top:40px">
+    <div class="card"><div class="stat c">+21<span class="u">%</span></div><div class="statlbl">sales lift from a visible money-back guarantee (Patel test) — net +6.5% after refunds</div></div>
+    <div class="card"><div class="stat g">8–12<span class="u">%</span></div><div class="statlbl">planned refund rate. A 0%-refund guarantee is one nobody believed</div></div>
+    <div class="card"><div class="stat b">20–30<span class="u">%</span></div><div class="statlbl">of refund requests recoverable with one save offer</div></div>
+    <div class="card"><div class="stat a">&lt;2<span class="u">%</span></div><div class="statlbl">expected Layer-2 invocations — the showstopper that almost never fires</div></div>
+  </div>
+
+  <div class="row c3" style="margin-top:24px">
+    <div class="card"><h3>1 · B2B wants specificity</h3><p>Agency owners don't fear "not liking the software" — they fear paying $970 and never setting it up. The promise must name the outcome (Hormozi: the more business the buyer, the more specific the guarantee).</p></div>
+    <div class="card"><h3>2 · Cost is asymmetric</h3><p>The software costs ~nothing to refund. The bonus stack (done-for-you setup, 1:1 session) is real labor — protect the labor, never weaken the headline.</p></div>
+    <div class="card"><h3>3 · Boldness wins the math</h3><p>Even when a stronger guarantee raises refunds, net sales rise more. Strong @10% conversion − 12% refunds beats weak @7% − 5% refunds by ~26% kept revenue.</p></div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack">
+  <h2>The guarantee stack<span class="sub">Unconditional for trust + conditional for confidence. Named, branded, gated.</span></h2>
+
+  <div class="layer l1" style="margin-bottom:22px">
+    <span class="badge b1">Layer 1 · The trust layer — replaces the trial</span>
+    <h3 style="font-size:24px">The 30-Day "Delete-It-All" Guarantee</h3>
+    <div class="promise">"Try GoCSM for 30 days. If it's not for you — <b>for any reason, or no reason</b> — email us and we refund 100%. No call, no exit interview, no hoops. And you <b>keep the Churn Playbook, the templates, and everything you learned.</b> We'll even help you export your data."</div>
+    <div class="row c2">
+      <ul class="list">
+        <li><b>Window:</b> 30 days from purchase — not from activation. Clean, unambiguous</li>
+        <li><b>Scope:</b> full $970 refund (or all 3-pay installments paid to date)</li>
+        <li><b>Conditions:</b> none. One email = refund within 5 business days</li>
+      </ul>
+      <ul class="list">
+        <li><b>They keep:</b> digital bonuses — playbook PDF, templates, recording</li>
+        <li><b>Not kept:</b> the labor bonuses (see the gating rule)</li>
+        <li><b>Why unconditional:</b> software marginal cost ≈ 0 — "no questions asked" is exactly what makes skipping the trial feel safe</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="layer l2">
+    <span class="badge b2">Layer 2 · The confidence layer — the showstopper</span>
+    <h3 style="font-size:24px">The 60-Day "Red Flag" Guarantee</h3>
+    <div class="promise">"Complete your onboarding call and connect your sub-accounts. If GoCSM hasn't flagged <b>at least 3 genuinely at-risk client accounts you didn't already know about within 60 days</b>, you choose: we work with you free until it does — or we refund the year <b>AND you keep every bonus, including the done-for-you setup we already built.</b>"</div>
+    <div class="row c2">
+      <ul class="list">
+        <li><b>Conditions = the activation plan:</b> ① onboarding call within 14 days ② OAuth connected, ≥10 sub-accounts tracked</li>
+        <li><b>The promise:</b> ≥3 at-risk accounts surfaced (health &lt;40 or 2+ churn signals) the agency wasn't already managing</li>
+        <li><b>Remedy — their choice:</b> free service until delivered, OR full refund + keep everything</li>
+      </ul>
+      <ul class="list">
+        <li><b>Why it works:</b> the Hormozi formula — <i>if not X result in Y time, we do Z</i> — and any 20+ account portfolio has at-risk accounts. That's the product's entire premise</li>
+        <li><b>The conditions force the behavior</b> that prevents your #1 refund risk: churn-by-never-logging-in</li>
+        <li><b>Honest footnote:</b> tiny/very-healthy portfolios → converts to "verified-healthy + top 3 expansion candidates, or refund." Never fail on a technicality</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- COMBINED -->
+<section id="combined">
+  <h2>The combined webinar line</h2>
+  <div class="quote">"You're covered twice. 30 days, any reason, full refund, keep the bonuses. And if you do the onboarding and we don't find at-risk revenue hiding in your accounts within 60 days — we work free or pay you back. <i>The only way you lose money today is if you do nothing at all… which, ironically, is exactly how you're losing money right now.</i>"</div>
+  <div class="note punch" style="margin-top:20px"><b>Placement:</b> Layer 1 in one breath → pause → Layer 2 as the escalation — <b>immediately before the price reveal.</b> The buyer hears $970 while feeling zero risk.</div>
+</section>
+
+<!-- PROTECT -->
+<section id="protect">
+  <p class="part">Quiet mechanics — never in the pitch</p>
+  <h2>Anti-abuse &amp; cost protection</h2>
+  <div class="layer l1" style="margin-bottom:22px">
+    <span class="badge b1">⏱ Labor gating — the key move</span>
+    <h3 style="font-size:22px">Protection through choreography, invisible to the buyer</h3>
+    <div class="row c2" style="margin-top:14px">
+      <div>
+        <ul class="list">
+          <li><b>Two kinds of bonuses.</b> Digital (playbook PDF, templates, recording) cost nothing — refunders keep them, which is what makes the guarantee feel generous. Labor (done-for-you setup, 1:1 build) costs real team hours</li>
+          <li><b>The trap:</b> setup delivered week 1 → refund week 2 = you eat the refund AND the labor. Exactly Hormozi's high-fulfillment-cost warning</li>
+          <li><b>The fix is a schedule, not fine print:</b> deliver labor on <b>Days 7–21</b>. Impulse refunds land in week 1 — flaky buyers self-select out before any labor is spent. The serious ones, who wait a week and show up, are who you invest in</li>
+        </ul>
+      </div>
+      <div>
+        <div class="promise" style="margin:0 0 14px;font-size:15px">On the webinar you say only: <b>"we'll book your setup session right after purchase."</b> Never explain the delay — naming it as refund protection would poison the generosity of the whole guarantee.</div>
+        <ul class="list">
+          <li><b>Day 0:</b> purchase → digital bonuses delivered instantly, setup session booked</li>
+          <li><b>Days 1–7:</b> impulse-refund window passes — no labor at risk</li>
+          <li><b>Days 7–21:</b> done-for-you setup + 1:1 build delivered, inside the relationship</li>
+          <li><b>The deliberate exception:</b> complete onboarding, receive the setup, then invoke Layer 2 → <b>they keep the work.</b> &lt;2% ever will — and "keep the work even if we refund you" is what makes the Red Flag promise land as bold, not gimmick</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row c3">
+    <div class="card">
+      <h3>💳 3-pay rules</h3>
+      <p>Refund = installments paid to date, remaining installments canceled, access ends at refund. Windows run from first payment. No "refund payment 1, ride until payment 2 fails."</p>
+    </div>
+    <div class="card">
+      <h3>🧾 Chargeback prevention</h3>
+      <p>Clear descriptor ("GOCSM ANNUAL"), refund email printed on the receipt, 5-day SLA. A fast, friendly refund is 10× cheaper than a dispute. One redemption per agency/payment method.</p>
+    </div>
+    <div class="card">
+      <h3>⚖️ FTC honesty rule</h3>
+      <p>Every condition stated before purchase. Refund to original payment method. Terms on the checkout page itself — not buried in a T&amp;C link. Digital bonuses never clawed back: it costs nothing and it's the line that makes the guarantee feel generous instead of legal.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRESENT -->
+<section id="present">
+  <h2>Presentation choreography<span class="sub">Webinar → Q&amp;A → checkout → close emails.</span></h2>
+  <div class="row c2">
+    <div class="card">
+      <h3>Q&amp;A objection frames</h3>
+      <div class="qa"><div class="q">"What if I don't have time to set it up?"</div><div class="a">That's why setup is done for you — the Red Flag guarantee only asks you to show up to one call.</div></div>
+      <div class="qa"><div class="q">"What if my accounts are all healthy?"</div><div class="a">Then you'll know that for certain for the first time — and if we can't show you 3 at-risk OR your top expansion plays, you get your money back.</div></div>
+      <div class="qa"><div class="q">"Why no free trial?"</div><div class="a">A trial without onboarding is how people fail with software. You get the paid version of a trial: 30 days fully refundable, with our team actually setting you up. Less risk than a trial, not more.</div></div>
+    </div>
+    <div class="card">
+      <h3>Surface placement</h3>
+      <ul class="list">
+        <li><b>Webinar:</b> after the stack, before the price — risk reversal lands hardest right before the number</li>
+        <li><b>Checkout page:</b> badge + one-liner per layer + "refunds in 5 business days" (the SLA is itself a trust signal)</li>
+        <li><b>Close email #3:</b> the guarantee deep-dive — full terms, plainly written. Transparency converts the skeptics urgency can't</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section id="workflow">
+  <p class="part">Where you win back 20–30%</p>
+  <h2>The refund-request workflow<span class="sub">Reply within 1 business day. One save offer — never a gauntlet.</span></h2>
+  <div class="mermaid">
+flowchart TD
+  R["📩 Refund request arrives"] --> T{"Triage by<br/>reason + state"}
+  T -->|"Days 1–10,<br/>never activated"| S1["💡 'Want us to do the entire<br/>setup for you this week first?<br/>30 days pause while we build.'<br/>~30% take it"]
+  T -->|"Activated but<br/>underwhelmed"| S2["📞 20-min 'findings call'<br/>walking THEIR at-risk accounts"]
+  T -->|"Cashflow"| S3["🔄 Convert annual → monthly,<br/>refund the difference,<br/>keep the customer"]
+  T -->|"Anything else /<br/>second ask"| S4["✅ Refund same day, warmly.<br/>'The playbook's still yours.'"]
+  S1 -->|declines| S4
+  S2 -->|declines| S4
+  S3 -->|declines| S4
+  </div>
+  <div class="note"><b>Tag every refund with one reason</b> (never-activated / not-useful / cashflow / other). Never-activated &gt;50% of refunds = an onboarding problem, not an offer problem.</div>
+</section>
+
+<!-- METRICS -->
+<section id="metrics">
+  <h2>Metrics &amp; thresholds<span class="sub">The guarantee is a profit center wearing a safety vest.</span></h2>
+  <div class="row c2">
+    <div class="tbl">
+      <table>
+        <tr><th>Metric</th><th>Healthy</th><th>Action trigger</th></tr>
+        <tr><td>Refund rate (30-day)</td><td class="grn">5–10%</td><td class="red">&gt;15% → check never-activated share first</td></tr>
+        <tr><td>Layer 2 invoked</td><td class="grn">&lt;2%</td><td class="red">&gt;5% → tune the at-risk detection threshold</td></tr>
+        <tr><td>Save-offer acceptance</td><td class="grn">20–30%</td><td class="red">&lt;10% → offers mistimed or feel like friction</td></tr>
+        <tr><td>Chargeback rate</td><td class="grn">&lt;0.5%</td><td class="red">&gt;1% → fix SLA/descriptor immediately</td></tr>
+        <tr><td>Onboarding attendance</td><td class="grn">&gt;70%</td><td class="red">&lt;50% → add SMS scheduling push</td></tr>
+      </table>
+    </div>
+    <div class="chartbox">
+      <h3>Strong vs weak guarantee — kept revenue</h3>
+      <p class="cap">Per 100 attendees @ $970. Strong: 10% conv − 12% refunds. Weak: 7% conv − 5% refunds. ≈ +26% kept.</p>
+      <div class="cv"><canvas id="kept"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- COPY -->
+<section id="copy">
+  <h2>The copy block<span class="sub">Ready to paste — checkout page, slide, or email.</span></h2>
+  <div class="copyblock">
+    <h3>🛡️ The Double Guarantee</h3>
+    <p><b>1 · The 30-Day Delete-It-All Guarantee.</b> Any reason or none. One email, full refund in 5 business days, keep the Churn Playbook and templates.</p>
+    <p><b>2 · The 60-Day Red Flag Guarantee.</b> Show up to your onboarding call and connect your accounts. If GoCSM doesn't surface at least 3 at-risk client accounts you didn't know about, you pick: we work free until it does — or full refund and you keep everything, including your done-for-you setup.</p>
+    <p class="tag">The only losing move is doing nothing.</p>
+  </div>
+  <div class="note" style="margin-top:24px"><b>One-line summary:</b> an unconditional 30-day "keep-the-bonuses" refund builds the trust a trial used to provide · a conditional 60-day "3 at-risk accounts or we pay you" promise sells the outcome · labor bonuses sit past the impulse window · one save offer at the refund gate quietly recovers a third of would-be refunds.</div>
+  <div class="foot">GoCSM Money-Back Guarantee Design · v1.0 · 2026-06-11 · companion to the Pricing &amp; Offer Strategy and Trigger Playbook decks.</div>
+</section>
+</main>
+</div>
+
+<script>
+const ink='#1d1d1f',muted='#6e6e73',faint='#86868b',line='#e4e4e7';
+const A='#ff3b30',B='#34c759',C='#0071e3',gold='#ff9f0a';
+mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{
+  fontFamily:'-apple-system,SF Pro Text,Inter,sans-serif',fontSize:'13px',
+  primaryColor:'#f5f5f7',primaryTextColor:ink,primaryBorderColor:line,
+  lineColor:'#c7c7cc',secondaryColor:'#fff',tertiaryColor:'#fff'}});
+Chart.defaults.color=muted;Chart.defaults.font.family='-apple-system,SF Pro Text,Inter,sans-serif';
+Chart.defaults.font.size=13;Chart.defaults.borderColor=line;
+
+// strong vs weak guarantee kept revenue per 100 attendees @ $970
+// weak: 7 buyers, 5% refunds -> 7*970*0.95 = 6450; strong: 10 buyers, 12% refunds -> 10*970*0.88 = 8536
+new Chart(kept,{type:'bar',data:{
+  labels:['Weak guarantee','Strong guarantee'],
+  datasets:[
+    {label:'Kept revenue',data:[6450,8536],backgroundColor:['#d2d2d7',B],borderRadius:8,barPercentage:.5},
+    {label:'Refunded',data:[340,1164],backgroundColor:['#ececf0','rgba(255,59,48,.35)'],borderRadius:8,barPercentage:.5}
+  ]},
+  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,usePointStyle:true,padding:16}},
+    tooltip:{callbacks:{label:c=>c.dataset.label+': ~$'+c.raw.toLocaleString()}}},
+  scales:{x:{stacked:true,grid:{display:false},ticks:{color:faint}},
+    y:{stacked:true,grid:{color:line},ticks:{color:faint,callback:v=>'$'+(v/1000)+'k'},
+      title:{display:true,text:'per 100 attendees',color:faint}}}}});
+</script>
+</body>
+</html>

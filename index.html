@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoCSM · Webinar GTM Suite</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#fbfbfd; --surface:#ffffff; --surface2:#f5f5f7;
+    --ink:#1d1d1f; --muted:#6e6e73; --faint:#86868b; --line:#e4e4e7;
+    --A:#ff3b30; --B:#34c759; --C:#0071e3; --gold:#ff9f0a; --accent:#5e5ce6;
+    --r:24px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Inter,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+  a{text-decoration:none;color:inherit}
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:50;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.85);border-bottom:1px solid var(--line)}
+  .topbar .home{font-weight:600;font-size:14px;letter-spacing:-.01em}
+  .topbar .home b{color:var(--C)}
+  .topbar .links{display:flex;gap:4px}
+  .topbar .links a{font-size:13px;color:var(--muted);padding:6px 12px;border-radius:8px}
+  .topbar .links a:hover{background:var(--surface2);color:var(--ink)}
+
+  main{max-width:1100px;margin:0 auto;padding:130px 32px 120px}
+  .eyebrow{font-size:13px;font-weight:600;color:var(--C);text-transform:uppercase;text-align:center;margin:0 0 14px}
+  h1{font-size:64px;line-height:1.04;letter-spacing:-.035em;font-weight:650;margin:0 auto 20px;text-align:center;max-width:18ch}
+  h1 .g{background:linear-gradient(110deg,var(--C),var(--accent),var(--A));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .deck{font-size:21px;color:var(--muted);max-width:640px;margin:0 auto 56px;text-align:center;line-height:1.45}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+  .tile{display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:34px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04);transition:transform .25s cubic-bezier(.2,.8,.3,1),box-shadow .25s}
+  .tile:hover{transform:translateY(-4px);box-shadow:0 16px 40px -16px rgba(0,0,0,.16)}
+  .tile .num{font-size:13px;font-weight:600;color:var(--faint);letter-spacing:.05em}
+  .tile h2{font-size:26px;letter-spacing:-.02em;font-weight:650;margin:8px 0 8px}
+  .tile p{color:var(--muted);font-size:15px;margin:0 0 18px;line-height:1.5}
+  .tile .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--surface2);color:var(--muted)}
+  .tile .go{display:inline-block;margin-top:18px;font-size:14px;font-weight:600;color:var(--C)}
+  .t1{border-top:4px solid var(--C)} .t2{border-top:4px solid var(--accent)}
+  .t3{border-top:4px solid var(--gold)} .t4{border-top:4px solid var(--B)}
+
+  .flowwrap{margin-top:64px}
+  .flowwrap h3{text-align:center;font-size:22px;font-weight:650;letter-spacing:-.02em;margin:0 0 6px}
+  .flowwrap .cap{text-align:center;color:var(--faint);font-size:14px;margin:0 0 22px}
+  .mermaid{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;overflow-x:auto;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+
+  .foot{color:var(--faint);font-size:12.5px;text-align:center;margin-top:64px;padding-top:24px;border-top:1px solid var(--line)}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}h1{font-size:40px}main{padding:100px 20px 80px}.topbar .links{display:none}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a>
+  <div class="links">
+    <a href="funnel.html">Funnel &amp; Pricing</a>
+    <a href="content.html">Content Brief</a>
+    <a href="triggers.html">Trigger Playbook</a>
+    <a href="guarantee.html">Guarantee</a>
+  </div>
+</div>
+
+<main>
+  <p class="eyebrow">Internal Strategy · June 2026</p>
+  <h1>The complete webinar<br><span class="g">go-to-market system.</span></h1>
+  <p class="deck">Four connected documents — what to test, what to teach, what the product does after the sale, and the guarantee that closes it. One Apple-clean suite.</p>
+
+  <div class="grid">
+    <a class="tile t1" href="funnel.html">
+      <span class="num">01 · STRATEGY</span>
+      <h2>Funnel, A/B/C Test &amp; Pricing</h2>
+      <p>Three webinar angles on one Perfect-Webinar skeleton — Fear, Opportunity, Authority — plus the full money model: $970 annual hero, 3-pay, overage, L3 retainers, cashflow math.</p>
+      <div class="chips"><span class="chip">3 variants</span><span class="chip">6–9 wk test</span><span class="chip">$20–30K / 90d</span></div>
+      <span class="go">Open deck →</span>
+    </a>
+    <a class="tile t2" href="content.html">
+      <span class="num">02 · CURRICULUM</span>
+      <h2>Webinar Content Brief</h2>
+      <p>The actual teaching material — 5 Churn Signals with thresholds and stories, the 40/30/20/10 Health Score with the two-client autopsy, the 90-Day Playbook, and the slide-safe stats appendix.</p>
+      <div class="chips"><span class="chip">5 signals</span><span class="chip">killer slide</span><span class="chip">story bank</span></div>
+      <span class="go">Open deck →</span>
+    </a>
+    <a class="tile t3" href="triggers.html">
+      <span class="num">03 · DELIVERY</span>
+      <h2>Trigger Playbook</h2>
+      <p>All 9 production GoCSM triggers mapped to plays: config → automated workflow → human CSM action → escalation → metric. Severity lanes, composite stacks, and the 17-instance starter pack.</p>
+      <div class="chips"><span class="chip">9 triggers</span><span class="chip">4 stacks</span><span class="chip">L3 bridge</span></div>
+      <span class="go">Open deck →</span>
+    </a>
+    <a class="tile t4" href="guarantee.html">
+      <span class="num">04 · RISK REVERSAL</span>
+      <h2>The Double Guarantee</h2>
+      <p>The 30-Day Delete-It-All + 60-Day Red Flag stack that replaces the free trial — with labor gating, the refund-save workflow, and the kept-revenue math that makes boldness profitable.</p>
+      <div class="chips"><span class="chip">2 layers</span><span class="chip">+26% kept</span><span class="chip">copy block</span></div>
+      <span class="go">Open deck →</span>
+    </a>
+  </div>
+
+  <div class="flowwrap">
+    <h3>How the four fit together</h3>
+    <p class="cap">Strategy fills the room · curriculum earns the trust · the guarantee closes · the playbook retains.</p>
+    <div class="mermaid">
+flowchart LR
+  S["01 · Strategy<br/>angle test fills<br/>the webinar"] --> CU["02 · Curriculum<br/>teaching earns<br/>trust &amp; reciprocity"]
+  CU --> G["04 · Guarantee<br/>risk reversal<br/>closes the $970"]
+  G --> P["03 · Playbook<br/>triggers retain &amp;<br/>sell the L3 retainer"]
+  P -.->|"case studies feed<br/>the next webinar"| S
+    </div>
+  </div>
+
+  <div class="foot">GoCSM Webinar GTM Suite · v1.0 · 2026-06-11 · internal — contains pricing strategy, do not share publicly.</div>
+</main>
+<script>
+mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{
+  fontFamily:'-apple-system,SF Pro Text,Inter,sans-serif',fontSize:'13px',
+  primaryColor:'#f5f5f7',primaryTextColor:'#1d1d1f',primaryBorderColor:'#e4e4e7',
+  lineColor:'#c7c7cc',secondaryColor:'#fff',tertiaryColor:'#fff'}});
+</script>
+</body>
+</html>
