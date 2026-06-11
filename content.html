@@ -127,7 +127,7 @@
 </style>
 </head>
 <body>
-<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Home</a><a href="funnel.html">Funnel & Pricing</a><a href="content.html" class="active">Content Brief</a><a href="triggers.html">Trigger Playbook</a><a href="guarantee.html">Guarantee</a></div></div>
+<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Home</a><a href="funnel.html">Funnel & Pricing</a><a href="content.html" class="active">Content Brief</a><a href="triggers.html">Trigger Playbook</a><a href="guarantee.html">Guarantee</a><a href="mcp-onboarding.html">MCP &amp; Onboarding</a></div></div>
 <div class="wrap">
 <nav>
   <div class="brand">Go<b>CSM</b> · Content Brief</div>
@@ -165,7 +165,20 @@
 <!-- PART 1: SIGNALS -->
 <section id="signals">
   <p class="part">Part 1 · Secret #2 in every variant</p>
-  <h2>The 5 Churn Signals<span class="sub">Each one: what it is → why it predicts → lead time → manual GHL spot-check → thresholds.</span></h2>
+  <h2>The 5 Churn Signals<span class="sub">Each one: what it is → why it predicts → lead time → manual GHL spot-check → thresholds. But first — the cause that precedes them all.</span></h2>
+
+  <div class="card signal" style="border-top:3px solid var(--A);margin-bottom:24px"><div class="num">0</div>
+    <h3>Poor onboarding — the first cause</h3>
+    <span class="lead-pill">Day 0 · precedes everything · the disease the 5 signals are symptoms of</span>
+    <div class="row c2" style="margin-top:6px">
+      <p>The client never reached first value. Setup incomplete, no first win by Day 30 — every later signal (narrow adoption, falling usage, stale assets, silence) traces back here. <b>Completed onboarding churns ~8% at 90 days vs ~25% incomplete</b>, and 40–60% of all cancellations land in the first 90 days. An account that never launched isn't "early" — it's already churning, slowly.</p>
+      <div>
+        <div class="th"><div class="y"><b>🟡</b> No first-value moment by Day 14 (first booked appointment / first lead / first review)</div></div>
+        <div class="th"><div class="r"><b>🔴</b> Onboarding incomplete by Day 30 — core setup steps pending, &lt;2 features touched</div></div>
+        <p class="story">The expectations time-bomb: over-promised at the sale, nothing live by week three. The client didn't decide to leave in month four — they decided in week three. Month four is just when the invoice made it official.</p>
+      </div>
+    </div>
+  </div>
 
   <div class="chartbox" style="margin-bottom:24px">
     <h3>The signals fire in sequence — adoption first, payment last</h3>
@@ -224,6 +237,7 @@
   <div class="tbl">
     <table>
       <tr><th>#</th><th>Signal</th><th>Lead time</th><th>🟡 Yellow</th><th>🔴 Red</th></tr>
+      <tr><td>0</td><td><b>Poor onboarding</b> · the first cause</td><td>Day 0</td><td>No first value by Day 14</td><td class="red">Incomplete at Day 30</td></tr>
       <tr><td>1</td><td><b>Adoption narrowing</b></td><td>30–60 days</td><td>≤2 features</td><td class="red">−2 features in 60d</td></tr>
       <tr><td>2</td><td><b>Usage/spend decline</b></td><td>30–45 days</td><td>−20–30% MoM</td><td class="red">−50%+ / wallet ≈ 0</td></tr>
       <tr><td>3</td><td><b>Stale assets</b></td><td>45–90 days</td><td>Nothing new 30d</td><td class="red">Nothing new 60d+</td></tr>
@@ -429,11 +443,11 @@ const noG={grid:{display:false},ticks:{color:faint}};
 
 // lead-time horizontal bars (max lead time per signal)
 new Chart(leadtime,{type:'bar',data:{
-  labels:['1 · Adoption','2 · Usage/spend','3 · Stale assets','4 · Sentiment','5 · Payment'],
-  datasets:[{label:'lead time (days)',data:[60,45,90,45,30],
-    backgroundColor:[C,'#4a9eea',gold,'#ff7a5c',A],borderRadius:8,barPercentage:.62}]},
+  labels:['0 · Poor onboarding (first cause)','1 · Adoption','2 · Usage/spend','3 · Stale assets','4 · Sentiment','5 · Payment'],
+  datasets:[{label:'lead time (days)',data:[90,60,45,90,45,30],
+    backgroundColor:['#1d1d1f',C,'#4a9eea',gold,'#ff7a5c',A],borderRadius:8,barPercentage:.62}]},
   options:{indexAxis:'y',plugins:{legend:{display:false},
-    tooltip:{callbacks:{label:c=>'up to '+c.raw+' days warning'}}},
+    tooltip:{callbacks:{label:c=>c.dataIndex===0?'the whole first-90-day window':'up to '+c.raw+' days warning'}}},
   scales:{x:{...g,title:{display:true,text:'days of warning before cancellation',color:faint}},y:noG}}});
 
 // health weights donut

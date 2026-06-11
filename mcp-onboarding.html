@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoCSM — MCP &amp; Onboarding Activation Plan</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --bg:#fbfbfd; --surface:#ffffff; --surface2:#f5f5f7;
+    --ink:#1d1d1f; --muted:#6e6e73; --faint:#86868b; --line:#e4e4e7;
+    --A:#ff3b30; --B:#34c759; --C:#0071e3; --gold:#ff9f0a; --accent:#5e5ce6;
+    --r:20px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Inter,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+  a{color:var(--C);text-decoration:none}
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:50;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.85);border-bottom:1px solid var(--line)}
+  .topbar .home{font-weight:600;font-size:14px;color:var(--ink);letter-spacing:-.01em}
+  .topbar .home b{color:var(--C)}
+  .topbar .links{display:flex;gap:4px;flex-wrap:wrap}
+  .topbar .links a{font-size:13px;color:var(--muted);padding:6px 12px;border-radius:8px}
+  .topbar .links a:hover{background:var(--surface2);color:var(--ink)}
+  .topbar .links a.active{background:var(--surface2);color:var(--ink);font-weight:600}
+  .wrap{display:grid;grid-template-columns:236px 1fr;max-width:1320px;margin:52px auto 0}
+  nav{position:sticky;top:52px;align-self:start;height:calc(100vh - 52px);overflow-y:auto;padding:30px 18px;
+    backdrop-filter:saturate(180%) blur(20px);background:rgba(251,251,253,.8);border-right:1px solid var(--line)}
+  nav .brand{font-weight:600;font-size:16px;margin:0 8px 16px;letter-spacing:-.02em}
+  nav .brand b{color:var(--C)}
+  nav h4{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:18px 8px 6px;font-weight:600}
+  nav a{display:block;padding:6px 10px;border-radius:8px;color:var(--muted);font-size:13px}
+  nav a:hover{background:var(--surface2);color:var(--ink)}
+  main{padding:60px 56px 120px;min-width:0}
+  section{scroll-margin-top:76px;margin-bottom:84px}
+
+  .eyebrow{font-size:13px;font-weight:600;color:var(--C);margin:0 0 10px;text-transform:uppercase}
+  h1{font-size:50px;line-height:1.05;letter-spacing:-.03em;font-weight:650;margin:0 0 18px;max-width:17ch}
+  h1 .g{background:linear-gradient(110deg,var(--C),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .deck{font-size:21px;color:var(--muted);max-width:720px;line-height:1.45}
+  h2{font-size:34px;letter-spacing:-.025em;font-weight:650;margin:0 0 12px}
+  h2 .sub{display:block;font-size:18px;color:var(--faint);font-weight:400;margin-top:6px;letter-spacing:-.01em}
+  h3{font-size:18px;font-weight:600;margin:0 0 8px;letter-spacing:-.015em}
+  .part{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+
+  .row{display:grid;gap:20px}
+  .c2{grid-template-columns:repeat(2,1fr)}
+  .c3{grid-template-columns:repeat(3,1fr)}
+  .c4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .card p{margin:0;color:var(--muted);font-size:14.5px}
+  .tint{background:var(--surface2);border:none}
+
+  .stat{font-size:44px;font-weight:650;letter-spacing:-.04em;line-height:1}
+  .stat .u{font-size:20px;color:var(--faint);font-weight:500}
+  .stat.a{color:var(--A)} .stat.b{color:var(--B)} .stat.c{color:var(--C)} .stat.g{color:var(--gold)}
+  .statlbl{color:var(--muted);font-size:14px;margin-top:10px;line-height:1.4}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:12px 15px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  tr:last-child td{border-bottom:none}
+  .tbl{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  td.grn{color:#248a3d;font-weight:600}
+
+  .chartbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .chartbox h3{margin-bottom:2px}
+  .chartbox .cap{color:var(--faint);font-size:13px;margin:0 0 16px}
+  .cv{position:relative;height:280px}
+  .mermaid{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;overflow-x:auto;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+
+  ul.list{list-style:none;padding:0;margin:0}
+  ul.list li{padding:9px 0 9px 24px;position:relative;color:var(--muted);font-size:14.5px;border-bottom:1px solid var(--line)}
+  ul.list li:last-child{border-bottom:none}
+  ul.list li::before{content:"";position:absolute;left:2px;top:15px;width:6px;height:6px;border-radius:50%;background:var(--C)}
+  ul.list li b{color:var(--ink);font-weight:600}
+
+  .note{background:var(--surface2);border-radius:14px;padding:16px 20px;font-size:14.5px;color:var(--muted);margin:18px 0}
+  .note b{color:var(--ink)}
+  .note.punch{background:rgba(0,113,227,.06);font-size:16px;color:var(--ink);font-weight:500;line-height:1.45}
+
+  .prompt{background:#1d1d1f;color:#d2d2d7;border-radius:14px;padding:14px 18px;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:13px;line-height:1.6;margin:10px 0}
+  .prompt b{color:#7ff0c9;font-weight:500}
+  .prompt .u{color:#ffd60a}
+
+  .foot{color:var(--faint);font-size:12.5px;text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
+  @media(max-width:1080px){.wrap{grid-template-columns:1fr;margin-top:0}nav{display:none}main{padding:32px 20px}
+    h1{font-size:36px}h2{font-size:28px}.c2,.c3,.c4{grid-template-columns:1fr}.topbar{position:static}}
+</style>
+</head>
+<body>
+<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Home</a><a href="funnel.html">Funnel &amp; Pricing</a><a href="content.html">Content Brief</a><a href="triggers.html">Trigger Playbook</a><a href="guarantee.html">Guarantee</a><a href="mcp-onboarding.html" class="active">MCP &amp; Onboarding</a></div></div>
+<div class="wrap">
+<nav>
+  <div class="brand">Go<b>CSM</b> · Product Plan</div>
+  <h4>Why</h4>
+  <a href="#top">Signal 0 needs a product</a>
+  <h4>Onboarding Activation</h4>
+  <a href="#layers">The three layers</a>
+  <a href="#detectors">Detectors &amp; waves</a>
+  <a href="#stall">The Stall trigger play</a>
+  <a href="#metrics-ob">Success metrics</a>
+  <h4>MCP</h4>
+  <a href="#mcp">The AI-CSM story</a>
+  <a href="#routine">The daily routine</a>
+  <a href="#sherlock">Sherlock</a>
+  <h4>Wire-in</h4>
+  <a href="#gtm">How it feeds the GTM</a>
+</nav>
+
+<main>
+<!-- HERO -->
+<section id="top">
+  <p class="eyebrow">Product Plan · Onboarding Activation + MCP</p>
+  <h1>Signal 0 needs<br>a <span class="g">product.</span></h1>
+  <p class="deck">Poor onboarding is the first cause of churn — so GoCSM is building the system that detects it, fixes it, and proves it. And MCP turns the whole portfolio into something an agency owner can simply <i>ask</i>.</p>
+
+  <div class="row c4" style="margin-top:40px">
+    <div class="card"><div class="stat a">8 vs 25<span class="u">%</span></div><div class="statlbl">90-day churn: completed vs incomplete onboarding — the stake</div></div>
+    <div class="card"><div class="stat c">3</div><div class="statlbl">product layers: Builder · Doer widget · Stall dashboard</div></div>
+    <div class="card"><div class="stat g">3</div><div class="statlbl">delivery waves of detectable onboarding steps</div></div>
+    <div class="card"><div class="stat b">28+</div><div class="statlbl">live MCP tools — the portfolio, queryable in plain English</div></div>
+  </div>
+  <div class="note punch" style="margin-top:24px">The webinar teaches Signal 0 manually. The Layer-2 guarantee makes onboarding a condition. The Launch Stack catches week-one stalls. <b>Onboarding Activation is the product that automates all three — and MCP is how the agency talks to it.</b></div>
+</section>
+
+<!-- LAYERS -->
+<section id="layers">
+  <p class="part">Onboarding Activation · the architecture</p>
+  <h2>Three layers, one journey<span class="sub">The agency designs it once, every sub-account lives it, the dashboard tells you where it stalls.</span></h2>
+  <div class="mermaid">
+flowchart LR
+  A["<b>Layer A · Agency Builder</b><br/>versioned journeys<br/>4-step wizard, publish &amp; assign"] --> B["<b>Layer B · Doer Widget</b><br/>white-label, in the sub-account<br/>current-step card · 'it just knew'"]
+  B --> C["<b>Layer C · Stall Dashboard</b><br/>Verdict → Queue → Evidence → Detail<br/>+ HighLevel custom triggers"]
+  C -.->|"stalled-step events"| W["GHL workflows<br/>+ CSM playbook"]
+  </div>
+  <div class="row c3" style="margin-top:20px">
+    <div class="card" style="border-top:3px solid var(--C)">
+      <h3>A · The Agency Builder</h3>
+      <ul class="list">
+        <li>Versioned journey mechanism — edit safely, assign per sub-account</li>
+        <li>Guided <b>4-step wizard</b>, not a blank editor</li>
+        <li><b>Paste-checklist AI import</b> — agency pastes their existing onboarding doc, AI drafts the journey, human approves</li>
+        <li>White-label theming — the client never sees "GoCSM"</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <h3>B · The Doer Widget</h3>
+      <ul class="list">
+        <li>Lives inside the sub-account — non-blocking, progress-visible</li>
+        <li>One current-step card: do this next, here's why, here's how</li>
+        <li><b>The signature mechanic — "it just knew":</b> live detectors mark steps done the moment the client actually does them. No checkbox theater</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--B)">
+      <h3>C · The Stall Dashboard</h3>
+      <ul class="list">
+        <li><b>Verdict:</b> AI-attributed, trust-calibrated portfolio readout</li>
+        <li><b>Queue:</b> stalled accounts, triaged — the centerpiece</li>
+        <li><b>Evidence:</b> which step kills momentum across all clients</li>
+        <li><b>Triggers:</b> stalled-step → HighLevel custom trigger → workflow + CSM task</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DETECTORS -->
+<section id="detectors">
+  <h2>Detectors &amp; delivery waves<span class="sub">Steps are only as good as their detection. Three tiers of detectability, shipped in three research-backed waves.</span></h2>
+  <div class="row c2">
+    <div class="card">
+      <h3>The three detectability tiers</h3>
+      <ul class="list">
+        <li><b>Tier 1 · Auto-detected:</b> ClickHouse syncs + live read-on-focus — step completes itself (pipeline created, calendar live, number purchased)</li>
+        <li><b>Tier 2 · Assisted:</b> system sees a strong proxy, asks for one-tap confirmation</li>
+        <li><b>Tier 3 · Manual:</b> human attests (e.g. "kickoff call held") — kept rare by design</li>
+      </ul>
+      <div class="note" style="margin-bottom:0">Detection freshness: nightly scan + <b>read-on-focus</b> live verification — the widget re-checks the moment the client opens it, so "it just knew" stays true.</div>
+    </div>
+    <div class="card">
+      <h3>The prioritized step catalog</h3>
+      <ul class="list">
+        <li><b>Wave 1 · Communication rails</b> — the universal blockers: phone number, email domain, calendar connected. Nothing works until these do</li>
+        <li><b>Wave 2 · Lead capture &amp; conversion</b> — pipeline, forms/funnels, first workflow, first contact import</li>
+        <li><b>Wave 3 · Integrations &amp; human anchor</b> — payments, review/reputation, the kickoff call</li>
+      </ul>
+      <div class="note" style="margin-bottom:0">Wave 1 maps 1:1 to the webinar's "time-to-first-ring" teaching — <b>the product ships the same priorities the masterclass preaches.</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- STALL PLAY -->
+<section id="stall">
+  <p class="part">The 10th play — extends the Trigger Playbook</p>
+  <h2>The Onboarding Stall play<span class="sub">The new custom trigger the activation system adds — Signal 0, automated.</span></h2>
+  <div class="row c3">
+    <div class="card">
+      <h3>⚙️ Configure</h3>
+      <ul class="list">
+        <li>Step stalled <b>&gt;5 days</b> in Wave 1 → yellow lane</li>
+        <li>Journey <b>&lt;50% at Day 21</b> → red lane</li>
+        <li>Journey complete → 🟢 celebration + review-ask workflow</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🤖 Automated</h3>
+      <ul class="list">
+        <li>Stalled step → white-label nudge with the exact next action + how-to</li>
+        <li>Wave-1 blocker stalled → escalate immediately: <b>their campaigns literally can't send</b></li>
+        <li>Day-21 red → book-a-setup-call link, CSM task with the stalled step named</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>👤 CSM</h3>
+      <ul class="list">
+        <li>Red lane: 15-min "we'll finish it for you" screen-share — done-for-you beats one more tutorial</li>
+        <li>Evidence view weekly: the step that stalls <b>most clients</b> is the journey design problem to fix</li>
+        <li>Completion = the Layer-2 guarantee condition satisfied — log it</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- OB METRICS -->
+<section id="metrics-ob">
+  <h2>Success metrics<span class="sub">The activation ladder the dashboard itself reports.</span></h2>
+  <div class="row c2">
+    <div class="tbl">
+      <table>
+        <tr><th>Metric</th><th>Target</th></tr>
+        <tr><td>Sub-accounts assigned a journey</td><td class="grn">&gt;80% of new accounts</td></tr>
+        <tr><td>Wave-1 rails complete by Day 7</td><td class="grn">&gt;70%</td></tr>
+        <tr><td>First-value moment by Day 30</td><td class="grn">≥60% (the webinar's own milestone)</td></tr>
+        <tr><td>Journey completion by Day 45</td><td class="grn">&gt;50%</td></tr>
+        <tr><td>90-day churn · completed vs not</td><td class="grn">track toward the 8%-vs-25% split</td></tr>
+      </table>
+    </div>
+    <div class="chartbox">
+      <h3>Why this is the highest-leverage build</h3>
+      <p class="cap">90-day churn by onboarding state — the gap the product closes.</p>
+      <div class="cv"><canvas id="obchurn"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- MCP -->
+<section id="mcp">
+  <p class="part">MCP · the AI-CSM story</p>
+  <h2>The portfolio you can ask<span class="sub">GoCSM's MCP server is live — 28+ tools spanning read, diagnose, and act. Claude (or any MCP client) becomes the agency's AI CSM.</span></h2>
+  <div class="row c3">
+    <div class="card" style="border-top:3px solid var(--C)">
+      <h3>👁 Read</h3>
+      <ul class="list">
+        <li>get_agency_overview · get_account · get_account_history</li>
+        <li>list_sub_accounts_login_activity · get_feature_metrics</li>
+        <li>get_revenue_summary · spend_breakdown · agency_plans</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <h3>🩺 Diagnose</h3>
+      <ul class="list">
+        <li>list_accounts_at_risk · get_churn_analysis</li>
+        <li>list_feature_adoption_gaps · metric_movers</li>
+        <li>list_failed_payments · upcoming_renewals · upsell_candidates</li>
+        <li>get_account_ai_summary · feedback_responses</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--B)">
+      <h3>⚡ Act</h3>
+      <ul class="list">
+        <li>trigger_workflow · send_message_to_user</li>
+        <li>request_feedback · set_account_priority · set_user_key_status</li>
+        <li>Every playbook play, executable from a chat</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ROUTINE -->
+<section id="routine">
+  <h2>The daily AI-CSM routine<span class="sub">Five prompts that replace an hour of dashboard archaeology — and the webinar's most demo-able moment.</span></h2>
+  <div class="row c2">
+    <div>
+      <div class="prompt"><b>›</b> Which of my accounts went <span class="u">at-risk</span> this week, and why — by health dimension?</div>
+      <div class="prompt"><b>›</b> Any <span class="u">failed payments</span> or renewals inside 30 days on accounts below health 60?</div>
+      <div class="prompt"><b>›</b> Who are my top 5 <span class="u">upsell candidates</span> and what signal makes each one ready?</div>
+      <div class="prompt"><b>›</b> Which onboarding step is <span class="u">stalling the most</span> new clients right now?</div>
+      <div class="prompt"><b>›</b> Draft the check-in message for FitZone and <span class="u">send it</span>.</div>
+    </div>
+    <div class="card">
+      <h3>Why this matters commercially</h3>
+      <ul class="list">
+        <li><b>Webinar demo:</b> after the dashboard tour, one live "ask Claude about my portfolio" moment — no competitor in the GHL space can show this</li>
+        <li><b>Differentiator:</b> GoCSM isn't a report, it's a data spine any AI can operate</li>
+        <li><b>L3 delivery:</b> the retainer team runs on the same routine — MCP is what makes $500/mo for ~4 hrs profitable</li>
+        <li><b>Content engine:</b> the routine is itself YouTube material (the AI-CSM video project)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SHERLOCK -->
+<section id="sherlock">
+  <h2>Sherlock — the conversational assist<span class="sub">Phase 4 of the activation plan: the MCP brain, embedded in the product.</span></h2>
+  <div class="row c2">
+    <div class="card">
+      <p style="font-size:15.5px"><b>Same tools, no setup.</b> Sherlock is the in-dashboard conversational layer over the stall analytics — "why is Smile Dental stuck?" answered with the evidence trail. MCP serves the power users today; Sherlock brings the identical capability to every agency owner who'll never configure an MCP client.</p>
+    </div>
+    <div class="card tint">
+      <h3>Sequencing</h3>
+      <ul class="list">
+        <li><b>Now:</b> MCP tools live — demo-ready for the webinar</li>
+        <li><b>Phases 1–3:</b> journeys, widget, detectors, stall dashboard + custom trigger</li>
+        <li><b>Phase 4:</b> Sherlock — conversational assist on top of the same data spine</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- GTM WIRE-IN -->
+<section id="gtm">
+  <h2>How it feeds the GTM suite<span class="sub">Every deck in this site gains a layer from this build.</span></h2>
+  <div class="tbl">
+    <table>
+      <tr><th>Deck</th><th>What MCP + Onboarding adds</th></tr>
+      <tr><td><a href="content.html">Content Brief</a></td><td><b>Signal 0</b> taught as the first cause — the product is its automated answer</td></tr>
+      <tr><td><a href="funnel.html">Funnel &amp; Pricing</a></td><td>Variant C demo gains the activation dashboard + the live MCP "ask my portfolio" moment</td></tr>
+      <tr><td><a href="guarantee.html">Guarantee</a></td><td>Layer 2's onboarding condition becomes <b>measurable in-product</b> — attendance + journey progress, no disputes</td></tr>
+      <tr><td><a href="triggers.html">Trigger Playbook</a></td><td>The 10th play (Onboarding Stall) joins the Launch Stack; MCP makes every play executable from chat</td></tr>
+    </table>
+  </div>
+  <div class="note punch" style="margin-top:20px"><b>The through-line:</b> the masterclass teaches Signal 0 → the guarantee makes onboarding the condition → the product detects and fixes the stall → MCP lets the agency ask about it in plain English → the L3 retainer runs the whole loop for them.</div>
+  <div class="foot">GoCSM MCP &amp; Onboarding Activation Plan · v1.0 · 2026-06-11 · grounded in the Onboarding &amp; Activation PRD v1.11 and the live GoCSM MCP toolset.</div>
+</section>
+</main>
+</div>
+
+<script>
+const ink='#1d1d1f',muted='#6e6e73',faint='#86868b',line='#e4e4e7';
+const A='#ff3b30',B='#34c759',C='#0071e3',gold='#ff9f0a';
+mermaid.initialize({startOnLoad:true,theme:'base',themeVariables:{
+  fontFamily:'-apple-system,SF Pro Text,Inter,sans-serif',fontSize:'13px',
+  primaryColor:'#f5f5f7',primaryTextColor:ink,primaryBorderColor:line,
+  lineColor:'#c7c7cc',secondaryColor:'#fff',tertiaryColor:'#fff'}});
+Chart.defaults.color=muted;Chart.defaults.font.family='-apple-system,SF Pro Text,Inter,sans-serif';
+Chart.defaults.font.size=13;Chart.defaults.borderColor=line;
+
+new Chart(obchurn,{type:'bar',data:{
+  labels:['Completed onboarding','Incomplete onboarding'],
+  datasets:[{data:[8,25],backgroundColor:[B,A],borderRadius:8,barPercentage:.5}]},
+  options:{indexAxis:'y',plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:c=>c.raw+'% churned at 90 days'}}},
+  scales:{x:{grid:{color:line},ticks:{color:faint,callback:v=>v+'%'},title:{display:true,text:'90-day churn',color:faint}},y:{grid:{display:false},ticks:{color:faint}}}}});
+</script>
+</body>
+</html>
