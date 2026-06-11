@@ -115,10 +115,23 @@
   .wrap{margin-top:52px}
   nav{top:52px;height:calc(100vh - 52px)}
   @media(max-width:1080px){.topbar{position:static}.wrap{margin-top:0}}
+
+  /* book chrome */
+  .chstrip{display:flex;align-items:baseline;gap:12px;margin:0 0 28px;font-size:13px;color:var(--faint)}
+  .chstrip .pt{font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:11px;color:var(--accent)}
+  .chstrip b{color:var(--ink);font-weight:600;font-size:13px}
+  .chstrip .bar{flex:1;height:1px;background:var(--line)}
+  .pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:64px}
+  .pager a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 22px;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:transform .2s,box-shadow .2s}
+  .pager a:hover{transform:translateY(-2px);box-shadow:0 10px 28px -12px rgba(0,0,0,.15)}
+  .pager .dir{display:block;font-size:11px;color:var(--faint);text-transform:uppercase;font-weight:600;letter-spacing:.05em;margin-bottom:4px}
+  .pager .t{font-weight:600;font-size:15.5px;letter-spacing:-.01em}
+  .pager .nx{text-align:right}
+  @media(max-width:860px){.pager{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Home</a><a href="funnel.html" class="active">Funnel & Pricing</a><a href="content.html">Content Brief</a><a href="triggers.html">Trigger Playbook</a><a href="guarantee.html">Guarantee</a><a href="mcp-onboarding.html">MCP &amp; Onboarding</a></div></div>
+<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Contents</a><a href="content.html">1 · Master the Material</a><a href="funnel.html" class="active">2 · Build the Webinar</a><a href="guarantee.html">3 · De-Risk the Buy</a><a href="triggers.html">4 · Run the Machine</a><a href="mcp-onboarding.html">5 · Automate It</a></div></div>
 <div class="wrap">
 <nav>
   <div class="brand">Go<b>CSM</b> · Webinar Funnel</div>
@@ -145,6 +158,7 @@
 </nav>
 
 <main>
+<div class="chstrip"><span class="pt">Part II · The Launch</span><b>Step 2 of 5 · Build the Webinar</b><span class="bar"></span><span>GoCSM GTM Playbook</span></div>
 <!-- HERO -->
 <section id="top">
   <p class="eyebrow">A/B/C Test Design</p>
@@ -485,6 +499,7 @@ flowchart LR
   <div class="note warn" style="margin-top:20px"><b>Thresholds:</b> no variant clears ~30% reg → the <b>pain</b> is wrong. Reg strong, attendee→buyer weak → the <b>demo</b>. Paid conversion weak everywhere → the <b>offer</b>.</div>
   <div class="foot">GoCSM Webinar Funnel · A/B/C Test Plan · 2026-06-11 · figures are third-party benchmarks &amp; ranges, not verified GoCSM outcomes.</div>
 </section>
+<div class="pager"><a href="content.html"><span class="dir">← Previous · Step 1</span><span class="t">Master the Material</span></a><a class="nx" href="guarantee.html"><span class="dir">Next · Step 3 →</span><span class="t">De-Risk the Buy</span></a></div>
 </main>
 </div>
 

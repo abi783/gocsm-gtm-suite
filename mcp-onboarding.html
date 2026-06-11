@@ -89,10 +89,23 @@
   .foot{color:var(--faint);font-size:12.5px;text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
   @media(max-width:1080px){.wrap{grid-template-columns:1fr;margin-top:0}nav{display:none}main{padding:32px 20px}
     h1{font-size:36px}h2{font-size:28px}.c2,.c3,.c4{grid-template-columns:1fr}.topbar{position:static}}
+
+  /* book chrome */
+  .chstrip{display:flex;align-items:baseline;gap:12px;margin:0 0 28px;font-size:13px;color:var(--faint)}
+  .chstrip .pt{font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:11px;color:var(--accent)}
+  .chstrip b{color:var(--ink);font-weight:600;font-size:13px}
+  .chstrip .bar{flex:1;height:1px;background:var(--line)}
+  .pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:64px}
+  .pager a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 22px;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:transform .2s,box-shadow .2s}
+  .pager a:hover{transform:translateY(-2px);box-shadow:0 10px 28px -12px rgba(0,0,0,.15)}
+  .pager .dir{display:block;font-size:11px;color:var(--faint);text-transform:uppercase;font-weight:600;letter-spacing:.05em;margin-bottom:4px}
+  .pager .t{font-weight:600;font-size:15.5px;letter-spacing:-.01em}
+  .pager .nx{text-align:right}
+  @media(max-width:860px){.pager{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Home</a><a href="funnel.html">Funnel &amp; Pricing</a><a href="content.html">Content Brief</a><a href="triggers.html">Trigger Playbook</a><a href="guarantee.html">Guarantee</a><a href="mcp-onboarding.html" class="active">MCP &amp; Onboarding</a></div></div>
+<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Contents</a><a href="content.html">1 · Master the Material</a><a href="funnel.html">2 · Build the Webinar</a><a href="guarantee.html">3 · De-Risk the Buy</a><a href="triggers.html">4 · Run the Machine</a><a href="mcp-onboarding.html" class="active">5 · Automate It</a></div></div>
 <div class="wrap">
 <nav>
   <div class="brand">Go<b>CSM</b> · Product Plan</div>
@@ -112,6 +125,7 @@
 </nav>
 
 <main>
+<div class="chstrip"><span class="pt">Part III · The System</span><b>Step 5 of 5 · Automate It</b><span class="bar"></span><span>GoCSM GTM Playbook</span></div>
 <!-- HERO -->
 <section id="top">
   <p class="eyebrow">Product Plan · Onboarding Activation + MCP</p>
@@ -335,6 +349,7 @@ flowchart LR
   <div class="note punch" style="margin-top:20px"><b>The through-line:</b> the masterclass teaches Signal 0 → the guarantee makes onboarding the condition → the product detects and fixes the stall → MCP lets the agency ask about it in plain English → the L3 retainer runs the whole loop for them.</div>
   <div class="foot">GoCSM MCP &amp; Onboarding Activation Plan · v1.0 · 2026-06-11 · grounded in the Onboarding &amp; Activation PRD v1.11 and the live GoCSM MCP toolset.</div>
 </section>
+<div class="pager"><a href="triggers.html"><span class="dir">← Previous · Step 4</span><span class="t">Run the Machine</span></a><a class="nx" href="index.html"><span class="dir">Finished →</span><span class="t">Back to Contents</span></a></div>
 </main>
 </div>
 

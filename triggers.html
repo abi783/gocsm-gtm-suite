@@ -114,10 +114,23 @@
   .wrap{margin-top:52px}
   nav{top:52px;height:calc(100vh - 52px)}
   @media(max-width:1080px){.topbar{position:static}.wrap{margin-top:0}}
+
+  /* book chrome */
+  .chstrip{display:flex;align-items:baseline;gap:12px;margin:0 0 28px;font-size:13px;color:var(--faint)}
+  .chstrip .pt{font-weight:600;letter-spacing:.05em;text-transform:uppercase;font-size:11px;color:var(--accent)}
+  .chstrip b{color:var(--ink);font-weight:600;font-size:13px}
+  .chstrip .bar{flex:1;height:1px;background:var(--line)}
+  .pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:64px}
+  .pager a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 22px;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:transform .2s,box-shadow .2s}
+  .pager a:hover{transform:translateY(-2px);box-shadow:0 10px 28px -12px rgba(0,0,0,.15)}
+  .pager .dir{display:block;font-size:11px;color:var(--faint);text-transform:uppercase;font-weight:600;letter-spacing:.05em;margin-bottom:4px}
+  .pager .t{font-weight:600;font-size:15.5px;letter-spacing:-.01em}
+  .pager .nx{text-align:right}
+  @media(max-width:860px){.pager{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Home</a><a href="funnel.html">Funnel & Pricing</a><a href="content.html">Content Brief</a><a href="triggers.html" class="active">Trigger Playbook</a><a href="guarantee.html">Guarantee</a><a href="mcp-onboarding.html">MCP &amp; Onboarding</a></div></div>
+<div class="topbar"><a class="home" href="index.html">Go<b>CSM</b> · Webinar GTM Suite</a><div class="links"><a href="index.html">Contents</a><a href="content.html">1 · Master the Material</a><a href="funnel.html">2 · Build the Webinar</a><a href="guarantee.html">3 · De-Risk the Buy</a><a href="triggers.html" class="active">4 · Run the Machine</a><a href="mcp-onboarding.html">5 · Automate It</a></div></div>
 <div class="wrap">
 <nav>
   <div class="brand">Go<b>CSM</b> · Trigger Playbook</div>
@@ -142,6 +155,7 @@
 </nav>
 
 <main>
+<div class="chstrip"><span class="pt">Part III · The System</span><b>Step 4 of 5 · Run the Machine</b><span class="bar"></span><span>GoCSM GTM Playbook</span></div>
 <!-- HERO -->
 <section id="top">
   <p class="eyebrow">9 triggers · 9 plays · 1 operating system</p>
@@ -612,6 +626,7 @@ flowchart LR
   <div class="note punch" style="margin-top:24px"><b>The L3 bridge:</b> every play in this document is also a sales asset. "You caught 3 at-risk clients this quarter — want us to run this whole playbook for you?" is the Day-90 QBR line that sells the $500–1,500/mo CSM retainer.</div>
   <div class="foot">GoCSM Trigger Playbook · v1.0 · 2026-06-11 · built on the 9 production triggers in ghl-trigger-engine · benchmarks: Recurly 2025, ChurnZero/Gainsight playbook patterns, 90-day renewal research.</div>
 </section>
+<div class="pager"><a href="guarantee.html"><span class="dir">← Previous · Step 3</span><span class="t">De-Risk the Buy</span></a><a class="nx" href="mcp-onboarding.html"><span class="dir">Next · Step 5 →</span><span class="t">Automate It</span></a></div>
 </main>
 </div>
 
